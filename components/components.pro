@@ -1,3 +1,4 @@
+QT += statemachine
 TEMPLATE = lib
 CONFIG += staticlib
 SOURCES = \
