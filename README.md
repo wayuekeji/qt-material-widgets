@@ -1,3 +1,9 @@
+# Qt Material Design Desktop Widgets [![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)]() 
+
+**YouTube** video preview [available here](http://www.youtube.com/watch?v=21UMeNVBPU4).
+
+---
+
 I've been using Qt for a while, the lack of UI framework is a big problem for me.
 
 After building UI components from scratch for a while, I decided to try reusing other's projects, that is no piece of cake.
@@ -8,47 +14,63 @@ Pull requests from other developer, such as [move to cmake](https://github.com/l
 
 I'm very honored to try to take over the maintenance of this project, and welcome all pull requests and issues.
 
-# Overview
+## Overview
 
 The original project only supports the qmake build system on Linux platform.
 
 The new project will support both qmake and CMake on as many platforms as possible, mainly Windows, Android ,Linux and MacOS.
 
 
-# Usage
+## Usage
 
-### 1. clone this project
+### use in your own project
 
-### 2. create your widgets app
+#### CMake
+
+1. clone this project
+
+```
+git clone https://github.com/Zhang-Tianxu/qt-material-widgets
+```
+
+2. create your widgets app with CMake build system
 
 Create *Qt Widgets Application* with CMake project as normal
 
-### 3. modify CMakeLists.txt of your app
-
-First, add *component* as subdirectory of your project
-
-```CMake
-add_subdirectory(/path/to/qt-material-widgets/components/ ./components)
-```
-
-I'm not sure if these two line is really needed, you can add them when you count error
-
-```CMake
-set(CMAKE_INCLUDE_CURRENT_DIR ON) # I'm not sure if it is really needed
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # I'm not sure if it is really needed
-```
-
-then, add *include* and *link libraries*:
-
-- add `/path/to/qt-material-widgets/include/qmeterial/` into `target_include_directories` for headers
-- add `components` into `target_link_libraries` for `.lib`
+3. modify `CMakeLists.txt` of your app
+    1. add *component* as subdirectory of your project
+    ```CMake
+    add_subdirectory(/path/to/qt-material-widgets/components/ ./components)
+    ```
+    2. add *include* and *link libraries*:
+        - add `/path/to/qt-material-widgets/include/qmeterial/` into `target_include_directories` for headers
+        - add `components` into `target_link_libraries` for `.lib`
 
 Now you can use *qt-material-widgets*, all components list as follows:
 
-# Qt Material Design Desktop Widgets [![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)]() [![Join the chat at https://gitter.im/qt-material-widgets/Lobby](https://badges.gitter.im/qt-material-widgets/Lobby.svg)](https://gitter.im/qt-material-widgets/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+#### qmake
 
-YouTube video preview [available here](http://www.youtube.com/watch?v=21UMeNVBPU4).
+1. clone this project
 
+```
+git clone https://github.com/Zhang-Tianxu/qt-material-widgets
+```
+
+2. create your widgets app with qmake build system
+
+### example
+
+1. clone this project
+
+```
+git clone https://github.com/Zhang-Tianxu/qt-material-widgets
+```
+
+2. open `CMakeLists.txt`/`qt-material-widgets.pro` in root directory of this repo by Qt Creator
+3. select a build Kit and run
+
+
+## progress
 
 <table>
   <tbody>
