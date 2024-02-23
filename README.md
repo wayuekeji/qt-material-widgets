@@ -1,6 +1,26 @@
-# Qt Material Design Desktop Widgets [![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)]() [![Join the chat at https://gitter.im/qt-material-widgets/Lobby](https://badges.gitter.im/qt-material-widgets/Lobby.svg)](https://gitter.im/qt-material-widgets/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Qt Material Design Desktop Widgets [![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)]()
 
 YouTube video preview [available here](http://www.youtube.com/watch?v=21UMeNVBPU4).
+
+---
+
+I've been using Qt for a while, the lack of UI framework is a big problem for me.
+
+After building UI components from scratch for a while, I decided to try reusing other's projects, that is no piece of cake.
+
+I found [qt-material-widgets](https://github.com/laserpants/qt-material-widgets), but sadly it seems to be no longer supported.
+
+Pull requests from other developer, such as [move to cmake](https://github.com/laserpants/qt-material-widgets/pull/50) which inspired me on migrating this project from `qmake` to `CMake`, are not accepted anymore.
+
+I'm very honored to try to take over the maintenance of this project, and welcome all pull requests and issues.
+
+## Overview
+
+The original project only supports the qmake build system on Linux platform.
+
+The new project will support both qmake and CMake on as many platforms as possible, mainly Windows, Android ,Linux and MacOS.
+
+## progress
 
 <table>
   <tbody>
