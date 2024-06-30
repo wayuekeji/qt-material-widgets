@@ -4,6 +4,7 @@
 #include "qtmaterialiconbutton_p.h"
 #include <QEvent>
 #include <QPainter>
+#include <QSize>
 
 /*!
  *  @class QtMaterialIconButtonPrivate
@@ -22,6 +23,7 @@ void QtMaterialIconButtonPrivate::init()
     Q_Q(QtMaterialIconButton);
 
     rippleOverlay = new QtMaterialRippleOverlay(q->parentWidget());
+    useColor = true;
     useThemeColors = true;
 
     rippleOverlay->installEventFilter(q);
@@ -48,11 +50,15 @@ void QtMaterialIconButtonPrivate::updateRipple()
  */
 
 QtMaterialIconButton::QtMaterialIconButton(const QIcon &icon, QWidget *parent)
+    : QtMaterialIconButton(icon, icon, parent)
+{}
+
+QtMaterialIconButton::QtMaterialIconButton(const QIcon &icon, const QIcon &disabledIcon, QWidget *parent)
     : QAbstractButton(parent)
     , d_ptr(new QtMaterialIconButtonPrivate(this))
 {
     d_func()->init();
-
+    d_ptr->disabledIcon = disabledIcon;
     setIcon(icon);
 }
 
@@ -63,7 +69,34 @@ QtMaterialIconButton::~QtMaterialIconButton() {}
  */
 QSize QtMaterialIconButton::sizeHint() const
 {
-    return iconSize();
+    QSize icSize = iconSize();
+    return QSize(icSize.width() * 1.2, icSize.height() * 1.2);
+}
+
+void QtMaterialIconButton::setDisabledIcon(const QIcon &_disabledIcon)
+{
+    Q_D(QtMaterialIconButton);
+    d->disabledIcon = _disabledIcon;
+    update();
+}
+
+void QtMaterialIconButton::setUseColor(bool value)
+{
+    Q_D(QtMaterialIconButton);
+
+    if (d->useColor == value) {
+        return;
+    }
+
+    d->useColor = value;
+    update();
+}
+
+bool QtMaterialIconButton::useColor()
+{
+    Q_D(const QtMaterialIconButton);
+
+    return d->useColor;
 }
 
 void QtMaterialIconButton::setUseThemeColors(bool value)
@@ -189,16 +222,25 @@ void QtMaterialIconButton::mousePressEvent(QMouseEvent *event)
 void QtMaterialIconButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
+    Q_D(const QtMaterialIconButton);
 
     QPainter painter(this);
-
-    QPixmap pixmap = icon().pixmap(iconSize());
-    QPainter icon(&pixmap);
-    icon.setCompositionMode(QPainter::CompositionMode_SourceIn);
-    icon.fillRect(pixmap.rect(), isEnabled() ? color() : disabledColor());
+    QPixmap pixmap;
+    if(d->useColor) {
+        pixmap = icon().pixmap(iconSize());
+        QPainter iconPainter(&pixmap);
+        iconPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+        iconPainter.fillRect(pixmap.rect(), isEnabled() ? color() : disabledColor());
+    } else {
+        if(isEnabled()) {
+            pixmap = icon().pixmap(iconSize());
+        } else {
+            pixmap = d->disabledIcon.pixmap(iconSize());
+        }
+    }
 
     QRect r(rect());
-    const qreal w = pixmap.width();
-    const qreal h = pixmap.height();
-    painter.drawPixmap(QRect((r.width() - w) / 2, (r.height() - h) / 2, w, h), pixmap);
+    const qreal w = pixmap.width() / 2;
+    const qreal h = pixmap.height() / 2;
+    painter.drawPixmap(QRect((r.width() - w) / 2, (r.height() - h) / 2, w, h), pixmap.scaled(iconSize() * 5, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

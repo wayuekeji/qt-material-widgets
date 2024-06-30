@@ -11,9 +11,15 @@ class QtMaterialIconButton : public QAbstractButton
 
 public:
     explicit QtMaterialIconButton(const QIcon &icon, QWidget *parent = 0);
+    explicit QtMaterialIconButton(const QIcon &icon, const QIcon &disabledIcon, QWidget *parent = 0);
     ~QtMaterialIconButton();
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
+
+    void setDisabledIcon(const QIcon &_disabledIcon);
+
+    void setUseColor(bool value);
+    bool useColor();
 
     void setUseThemeColors(bool value);
     bool useThemeColors() const;
