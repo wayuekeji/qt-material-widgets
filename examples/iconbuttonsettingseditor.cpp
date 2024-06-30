@@ -2,6 +2,7 @@
 #include <QColorDialog>
 #include <lib/qtmaterialtheme.h>
 #include <qtmaterialiconbutton.h>
+#include <QFileDialog>
 
 IconButtonSettingsEditor::IconButtonSettingsEditor(QWidget *parent)
     : QWidget(parent)
@@ -35,7 +36,19 @@ void IconButtonSettingsEditor::updateWidget()
 {
     m_button->setDisabled(ui->disabledCheckBox->isChecked());
     m_button->setUseThemeColors(ui->useThemeColorsCheckBox->isChecked());
+    m_button->setUseColor(ui->useColorCheckBox->isChecked());
     m_button->setIconSize(QSize(ui->sizeSpinBox->value(), ui->sizeSpinBox->value()));
+    m_button->update();
+}
+
+void IconButtonSettingsEditor::selectIconImage() {
+    QString imageUrl = QFileDialog::getOpenFileName(this, "choose icon image", "", "icon image(*.png *.jpg *.jpeg *.bmp)");
+    m_button->setIcon(QIcon(imageUrl));
+}
+
+void IconButtonSettingsEditor::selectDisabledIconImage() {
+    QString imageUrl = QFileDialog::getOpenFileName(this, "choose disabled icon image", "", "icon image(*.png *.jpg *.jpeg *.bmp)");
+    m_button->setDisabledIcon(QIcon(imageUrl));
 }
 
 void IconButtonSettingsEditor::selectColor()
@@ -79,7 +92,10 @@ void IconButtonSettingsEditor::init()
 
     connect(ui->disabledCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateWidget()));
     connect(ui->useThemeColorsCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateWidget()));
+    connect(ui->useColorCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateWidget()));
     connect(ui->colorToolButton, SIGNAL(clicked(bool)), this, SLOT(selectColor()));
     connect(ui->disabledColorToolButton, SIGNAL(clicked(bool)), this, SLOT(selectColor()));
     connect(ui->sizeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateWidget()));
+    connect(ui->selectIconImage, SIGNAL(clicked(bool)), this, SLOT(selectIconImage()));
+    connect(ui->selectDisabledIconImage, SIGNAL(clicked(bool)), this,SLOT(selectDisabledIconImage()));
 }

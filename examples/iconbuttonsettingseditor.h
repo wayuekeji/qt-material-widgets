@@ -23,6 +23,8 @@ protected slots:
     void setupForm();
     void updateWidget();
     void selectColor();
+    void selectIconImage();
+    void selectDisabledIconImage();
 
 private:
     void init();
