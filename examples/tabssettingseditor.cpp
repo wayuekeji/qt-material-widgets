@@ -2,6 +2,8 @@
 #include <QVBoxLayout>
 #include <QColorDialog>
 #include <qtmaterialtabs.h>
+#include <QDebug>
+#include <QPushButton>
 
 TabsSettingsEditor::TabsSettingsEditor(QWidget *parent)
     : QWidget(parent),
@@ -33,9 +35,21 @@ TabsSettingsEditor::TabsSettingsEditor(QWidget *parent)
     m_tabs->addTab("Video");
     m_tabs->addTab("Tools");
 
+    QPushButton *nextBtn = new QPushButton("Next Tab");
+    connect(nextBtn, &QPushButton::clicked, this, [=](){
+        m_tabs->setCurrentTab(m_tabs->currentIndex() + 1);
+    });
+    layout->addWidget(nextBtn);
+
     m_tabs->setMinimumWidth(700);
 
     setupForm();
+    connect(m_tabs, &QtMaterialTabs::currentChanged, this, [](int a) {
+        qInfo() << a << Qt::endl;
+    });
+
+    // connect(ui->useThemeColorsCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateWidget()));
+
 }
 
 TabsSettingsEditor::~TabsSettingsEditor()
