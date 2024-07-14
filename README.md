@@ -385,3 +385,10 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 - [ ] Stepper
 - [ ] Subheaders
 - [ ] Toolbar
+
+## About Android support
+
+example can compile and run properly, but UI not fit to mobile.
+
+<img style="width:400px;text-align:center;" src="https://github.com/Zhang-Tianxu/qt-material-widgets/assets/19359257/db116687-3dc3-445f-b41b-3e2594cf0d48" />
+
