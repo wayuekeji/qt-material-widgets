@@ -17,8 +17,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>0</y>
-     <width>248</width>
+     <y>30</y>
+     <width>259</width>
      <height>200</height>
     </rect>
    </property>
@@ -34,19 +34,23 @@
      <widget class="QCheckBox" name="disabledCheckBox"/>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="colorLabel">
+     <widget class="QLabel" name="backgroundColorLabel">
       <property name="text">
-       <string>Color</string>
+       <string>Background color</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QLineEdit" name="colorLineEdit"/>
+       <widget class="QLineEdit" name="backgroundColorLineEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="colorToolButton">
+       <widget class="QToolButton" name="backgroundColorToolButton">
         <property name="text">
          <string>...</string>
         </property>
@@ -55,13 +59,38 @@
      </layout>
     </item>
     <item row="2" column="0">
+     <widget class="QLabel" name="foregroundColorLabel">
+      <property name="text">
+       <string>Foreground color</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLineEdit" name="foregroundColorLineEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="foregroundColorToolButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>content</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="3" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLineEdit" name="newItemContentLineEdit"/>
@@ -74,6 +103,16 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="fontSizeLabel">
+      <property name="text">
+       <string>Font size</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QDoubleSpinBox" name="fontSizeDoubleSpinBox"/>
     </item>
    </layout>
   </widget>

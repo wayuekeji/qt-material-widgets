@@ -27,29 +27,30 @@ void ComboBoxSettingsEditor::init()
 
     ui->setupUi(widget);
     layout->setContentsMargins(20, 20, 20, 20);
+    ui->fontSizeDoubleSpinBox->setValue(15);
 
     layout = new QVBoxLayout;
     canvas->setLayout(layout);
 
-    m_combobox->addItem("1");
-    m_combobox->addItem("2");
-    m_combobox->addItem("3");
-
-    m_combobox->setFontSize(10);
-    m_combobox->setBackgroundColor(Qt::red);
+    m_combobox->setFontSize(15);
     layout->addWidget(m_combobox);
     layout->setAlignment(m_combobox, Qt::AlignCenter);
+
     connect(ui->addNewBtn, &QPushButton::clicked, this, [=](){
         m_combobox->addItem(ui->newItemContentLineEdit->text().size() > 0 ? ui->newItemContentLineEdit->text() : "empty");
     });
     connect(ui->disabledCheckBox, &QCheckBox::stateChanged, this, [=](int i){
-        qInfo() << i << Qt::endl;
         m_combobox->setDisabled(i == Qt::Checked);
     });
-    connect(ui->colorToolButton, &QToolButton::clicked, this, [=](bool checked){
+    connect(ui->foregroundColorToolButton, &QToolButton::clicked, this, [=](bool checked){
         selectColor();
     });
-    connect(ui->colorToolButton, SIGNAL(pressed()), this, SLOT(selectColor()));
+    connect(ui->backgroundColorToolButton, &QToolButton::clicked, this, [=](bool checked){
+        selectColor();
+    });
+    connect(ui->fontSizeDoubleSpinBox, &QDoubleSpinBox::valueChanged, this, [=](double value){
+        m_combobox->setFontSize(value);
+    });
 
     setupForm();
 }
@@ -60,9 +61,13 @@ void ComboBoxSettingsEditor::selectColor()
     if (dialog.exec()) {
         QColor color = dialog.selectedColor();
         QString senderName = sender()->objectName();
-        if ("colorToolButton" == senderName) {
+        if ("foregroundColorToolButton" == senderName) {
+            m_combobox->setForegroundColor(color);
+            ui->foregroundColorLineEdit->setText(color.name(QColor::HexRgb));
+        }
+        if ("backgroundColorToolButton" == senderName) {
             m_combobox->setBackgroundColor(color);
-            ui->colorLineEdit->setText(color.name(QColor::HexRgb));
+            ui->backgroundColorLineEdit->setText(color.name(QColor::HexRgb));
         }
     }
     setupForm();

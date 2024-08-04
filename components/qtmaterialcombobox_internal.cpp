@@ -49,19 +49,8 @@ void QtMaterialComboBoxDelegate::paint(QPainter* painter, const QStyleOptionView
 
 
 // ----------------------- QtMaterialComboBoxView --------------------------
-QtMaterialComboBoxView::QtMaterialComboBoxView(QAbstractItemView *parent) : QListView(parent) {};
+QtMaterialComboBoxView::QtMaterialComboBoxView(QWidget *parent) : QListView(parent) {};
 
 void QtMaterialComboBoxView::paintEvent(QPaintEvent *event) {
-
     QListView::paintEvent(event);
-    return;
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QPen(QColor("#c0c0c0"), 2));//fillRect(newRect, QColor("#C0C0C0"));
-    painter.setBrush(Qt::blue);
-    QRect originRect = rect();
-    originRect.adjust(2, 2, -2, -2); // Adjust the button rectangle for border
-    painter.drawRoundedRect(originRect,5,5); // Draw rounded rectangle
-    // QAbstractItemView::paintEvent(event);
-
 }
