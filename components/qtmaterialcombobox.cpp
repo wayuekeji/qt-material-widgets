@@ -28,6 +28,8 @@ QtMaterialComboBox::QtMaterialComboBox(QComboBox *parent): QComboBox(parent), d_
     d_func()->init();
 }
 
+QtMaterialComboBox::~QtMaterialComboBox() {}
+
 void QtMaterialComboBox::setForegroundColor(const QColor &color)
 {
     Q_D(QtMaterialComboBox);
