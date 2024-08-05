@@ -44,6 +44,7 @@ public:
     bool step;
     bool pageStepMode;
     bool useThemeColors;
+    bool showTooltip;
 };
 
 #endif  // QTMATERIALSLIDER_P_H
