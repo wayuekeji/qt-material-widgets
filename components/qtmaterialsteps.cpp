@@ -3,7 +3,7 @@
 
 #include <QHBoxLayout>
 
-int currentWidth = 0;
+static int currentWidth = 0;
 
 QtMaterialStepsPrivate::QtMaterialStepsPrivate(QtMaterialSteps *q)
     : q_ptr(q), clickable(true), currentStepIndex(0)
