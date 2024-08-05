@@ -24,11 +24,13 @@
 #include "appbarsettingseditor.h"
 #include "autocompletesettingseditor.h"
 #include "menusettingseditor.h"
+#include "comboboxsettingseditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     QWidget *widget = new QWidget;
+    widget->setMaximumHeight(800);
     QHBoxLayout *layout = new QHBoxLayout;
 
     widget->setLayout(layout);
@@ -65,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     AppBarSettingsEditor *appBar = new AppBarSettingsEditor;
     AutoCompleteSettingsEditor *autocomplete = new AutoCompleteSettingsEditor;
     MenuSettingsEditor *menu = new MenuSettingsEditor;
+    ComboBoxSettingsEditor *combobox = new ComboBoxSettingsEditor;
 
     stack->addWidget(appBar);
     stack->addWidget(autocomplete);
@@ -88,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent)
     stack->addWidget(steps);
     stack->addWidget(textField);
     stack->addWidget(toggle);
+    stack->addWidget(combobox);
 
     list->addItem("App Bar");
     list->addItem("Auto Complete");
@@ -111,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent)
     list->addItem("Steps");
     list->addItem("Text Field");
     list->addItem("Toggle");
+    list->addItem("combobox");
 
     list->setCurrentRow(0);
 

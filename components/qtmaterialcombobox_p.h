@@ -1,11 +1,11 @@
 #ifndef QTMATERIALCOMBOBOX_P_H
 #define QTMATERIALCOMBOBOX_P_H
 
-#include "lib/qtmaterialtheme.h"
 #include <QColor>
 #include <QtGlobal>
 
 class QtMaterialComboBox;
+class QColor;
 
 class QtMaterialComboBoxPrivate
 {

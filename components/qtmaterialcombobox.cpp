@@ -12,7 +12,9 @@ void QtMaterialComboBoxPrivate::init()
 {
     Q_Q(QtMaterialComboBox);
     useThemeColors = true;
-    fontSize = 10;
+    fontSize = 15;
+    foregroundColor = Qt::black;
+    backgroundColor = Qt::white;
     cornerRadius = 3;
     q->setStyle(&QtMaterialStyle::instance());
     q->setAttribute(Qt::WA_Hover);
@@ -25,8 +27,14 @@ void QtMaterialComboBoxPrivate::init()
 
 QtMaterialComboBox::QtMaterialComboBox(QComboBox *parent): QComboBox(parent), d_ptr(new QtMaterialComboBoxPrivate(this))
 {
+    QtMaterialComboBoxView *customView = new QtMaterialComboBoxView(this);
+    setView(customView);
+    customView->setStyleSheet("QListView { border: none;}");
+
     d_func()->init();
 }
+
+QtMaterialComboBox::~QtMaterialComboBox() {}
 
 void QtMaterialComboBox::setForegroundColor(const QColor &color)
 {
@@ -67,10 +75,6 @@ void QtMaterialComboBox::setFontSize(qreal size)
 
     d->fontSize = size;
 
-    QFont f(font());
-    f.setPointSizeF(size);
-    setFont(f);
-
     update();
 }
 
@@ -84,6 +88,8 @@ qreal QtMaterialComboBox::fontSize() const
 // paint combobox
 void QtMaterialComboBox::paintEvent(QPaintEvent *event)
 {
+    Q_D(const QtMaterialComboBox);
+
     Q_UNUSED(event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -94,20 +100,22 @@ void QtMaterialComboBox::paintEvent(QPaintEvent *event)
     buttonRect.adjust(2, 2, -2, -2); // Adjust the button rectangle for border
 
     painter.setPen(QPen(Qt::darkGray, 0.5));
-    painter.setBrush(Qt::white);
+    painter.setBrush(d->backgroundColor);
 
+    // frame
     painter.drawRoundedRect(buttonRect, buttonRect.height() / 5, buttonRect.height() / 5); // Draw rounded rectangle
 
     QRect textRect = QRect(buttonRect.left() + 10, buttonRect.top(), buttonRect.width(), buttonRect.height());
-    QFont font("黑体", 14); // Font family and size
+    QFont font("黑体", d->fontSize); // Font family and size
     font.setBold(true); // Set font weight to bold
     painter.setFont(font);
-    painter.setPen(Qt::black);
+    painter.setPen(d->foregroundColor);
+    // text
     painter.drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, currentText());
 
-    QIcon icon(":/assets/image/down.svg");
-    // QIcon icon("qrc:/icons/icons/navigation/svg/production/ic_arrow_downward_24px.svg");
+    QIcon icon(":/icons/icons/combobox/svg/down.svg");
     QPixmap pixmap = icon.pixmap(16, 16); // Adjust the size as needed
+    // icon
     painter.drawPixmap(width() - 32, (height() - 16) / 2, pixmap);
 
     setItemDelegate(new QtMaterialComboBoxDelegate(this));

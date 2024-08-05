@@ -21,7 +21,7 @@ public:
 
 class QtMaterialComboBoxView : public QListView {
 public:
-    QtMaterialComboBoxView(QAbstractItemView *parent = nullptr);
+    QtMaterialComboBoxView(QWidget *parent = nullptr);
     // void paintEvent(QPaintEvent *event) override;
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;

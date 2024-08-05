@@ -2,8 +2,6 @@
 #define QTMATERIALCOMBOBOX_H
 
 
-#include <QComboBox>
-#include <QScopedPointer>
 #include <QtWidgets/QComboBox>
 
 class QtMaterialComboBoxPrivate;
@@ -17,7 +15,7 @@ class QtMaterialComboBox : public QComboBox
     Q_PROPERTY(qreal fontSize WRITE setFontSize READ fontSize)
 public:
     explicit QtMaterialComboBox(QComboBox *parent = nullptr);
-    // ~QtMaterialComboBox();
+    ~QtMaterialComboBox();
 
     void setForegroundColor(const QColor &color);
     QColor foregroundColor() const;
