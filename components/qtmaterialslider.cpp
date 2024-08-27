@@ -4,6 +4,7 @@
 #include "qtmaterialslider_internal.h"
 #include "qtmaterialslider_p.h"
 #include <QMouseEvent>
+#include <QPainter>
 #include <QtWidgets/QApplication>
 
 /*!
@@ -34,6 +35,7 @@ void QtMaterialSliderPrivate::init()
     step = false;
     pageStepMode = true;
     useThemeColors = true;
+    showTooltip = true;
 
     q->setMouseTracking(true);
     q->setFocusPolicy(Qt::StrongFocus);
@@ -228,7 +230,7 @@ bool QtMaterialSlider::pageStepMode() const
  */
 QSize QtMaterialSlider::minimumSizeHint() const
 {
-    return Qt::Horizontal == orientation() ? QSize(130, 34) : QSize(34, 130);
+    return Qt::Horizontal == orientation() ? QSize(130, 50) : QSize(50, 130);
 }
 
 void QtMaterialSlider::setInvertedAppearance(bool value)
@@ -369,6 +371,21 @@ void QtMaterialSlider::leaveEvent(QEvent *event)
     d->setHovered(false);
 
     QAbstractSlider::leaveEvent(event);
+}
+
+void QtMaterialSlider::paintEvent(QPaintEvent *event)
+{
+    Q_D(QtMaterialSlider);
+    QAbstractSlider::paintEvent(event);
+    if(d->showTooltip && d->hoverThumb) {
+        QPainter *painter = new QPainter(this);
+        QRectF thumb(0, 0, 16, 16);
+        thumb.moveCenter(QPointF(d->thumbBoundingRect().center().rx(), d->thumbBoundingRect().top() + 10));
+        painter->fillRect(thumb.x() - 4, thumb.y() - 4, 24, 24, thumbColor());
+        painter->setPen(Qt::white);
+        painter->drawText(thumb, QString::number(value()));
+    }
+
 }
 
 void QtMaterialSlider::updateThumbOffset()

@@ -69,27 +69,6 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 2. open `CMakeLists.txt`/`qt-material-widgets.pro` in root directory of this repo by Qt Creator
 3. select a build Kit and run
 
-
-## progress
-
----
-
-I've been using Qt for a while, the lack of UI framework is a big problem for me.
-
-After building UI components from scratch for a while, I decided to try reusing other's projects, that is no piece of cake.
-
-I found [qt-material-widgets](https://github.com/laserpants/qt-material-widgets), but sadly it seems to be no longer supported.
-
-Pull requests from other developer, such as [move to cmake](https://github.com/laserpants/qt-material-widgets/pull/50) which inspired me on migrating this project from `qmake` to `CMake`, are not accepted anymore.
-
-I'm very honored to try to take over the maintenance of this project, and welcome all pull requests and issues.
-
-## Overview
-
-The original project only supports the qmake build system on Linux platform.
-
-The new project will support both qmake and CMake on as many platforms as possible, mainly Windows, Android ,Linux and MacOS.
-
 ## progress
 
 <table>
@@ -386,12 +365,7 @@ The new project will support both qmake and CMake on as many platforms as possib
 #### Work in progress
 
 - [ ] Divider
-- [ ] List
-- [ ] List Item
-- [ ] Menu
-- [ ] Paper
-- [ ] Snackbar Layout
-- [ ] Table
+- [ ] ComboBox
 
 #### Not implemented 
 
@@ -405,6 +379,12 @@ The new project will support both qmake and CMake on as many platforms as possib
 - [ ] Stepper
 - [ ] Subheaders
 - [ ] Toolbar
+- [ ] List
+- [ ] List Item
+- [ ] Menu
+- [ ] Paper
+- [ ] Snackbar Layout
+- [ ] Table
 
 ## About Android support
 

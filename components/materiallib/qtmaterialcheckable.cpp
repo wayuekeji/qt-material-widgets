@@ -8,6 +8,7 @@
 
 #include <QColor>
 #include <QCoreApplication>
+#include <QMouseEvent>
 #include <QEvent>
 #include <QEventTransition>
 #include <QPainter>
@@ -130,7 +131,16 @@ QtMaterialCheckable::QtMaterialCheckable(QWidget *parent)
     : QAbstractButton(parent)
     , d_ptr(new QtMaterialCheckablePrivate(this))
 {
+    setMouseTracking(true);
     d_func()->init();
+}
+
+QtMaterialCheckable::QtMaterialCheckable(QtMaterialCheckablePrivate &d, QWidget *parent)
+    : QAbstractButton(parent)
+    , d_ptr(&d)
+{
+    d_func()->init();
+    setMouseTracking(true);
 }
 
 QtMaterialCheckable::~QtMaterialCheckable() {}
@@ -294,13 +304,6 @@ QSize QtMaterialCheckable::sizeHint() const
     return QSize(fontMetrics().size(Qt::TextShowMnemonic, text()).width() + 52, 40);
 }
 
-QtMaterialCheckable::QtMaterialCheckable(QtMaterialCheckablePrivate &d, QWidget *parent)
-    : QAbstractButton(parent)
-    , d_ptr(&d)
-{
-    d_func()->init();
-}
-
 /*!
  *  @reimp
  */
@@ -338,6 +341,38 @@ bool QtMaterialCheckable::eventFilter(QObject *obj, QEvent *event)
         d->rippleOverlay->setGeometry(geometry().adjusted(-8, -8, 8, 8));
     }
     return QAbstractButton::eventFilter(obj, event);
+}
+
+void QtMaterialCheckable::leaveEvent(QEvent *event)
+{
+    Q_D(QtMaterialCheckable);
+    if(!isChecked()) {
+        d->uncheckedIcon->setColor(uncheckedColor());
+    }
+}
+
+/*!
+ *  @reimp
+ */
+void QtMaterialCheckable::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_D(QtMaterialCheckable);
+    if(event->button() == Qt::NoButton) {
+        QRect rec(0,0,d->uncheckedIcon->iconSize(), d->uncheckedIcon->iconSize());
+        if (QtMaterialCheckable::LabelPositionLeft == d->labelPosition) {
+            rec.moveCenter(QPoint(width() - 14, 28));
+        } else {
+            rec.moveCenter(QPoint(28, 28));
+        }
+
+        if(!isChecked()) {
+            if(rec.contains(event->pos())) {
+                d->uncheckedIcon->setColor(checkedColor());
+            } else {
+                d->uncheckedIcon->setColor(uncheckedColor());
+            }
+        }
+        }
 }
 
 /*!
