@@ -5,6 +5,7 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -27,7 +28,7 @@ file(GLOB HEADER2 "../include/qmetarial/lib/*")
 set(RCC_FILES resources.qrc)
 
 add_library(
-  ${PROJECT_NAME} STATIC ${THELIB} ${COMPONENTSHEADER} ${COMPONENTSSOURCE}
+  ${PROJECT_NAME} SHARED ${THELIB} ${COMPONENTSHEADER} ${COMPONENTSSOURCE}
                          ${RCC_FILES} ${HEADER} ${HEADER2})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
