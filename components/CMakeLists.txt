@@ -15,8 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core stateMachine)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core stateMachine)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core StateMachine)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core StateMachine)
 
 file(GLOB THELIB "materiallib/*") # 利用正则表达式找出源文件
 file(GLOB COMPONENTSHEADER "*.h")
