@@ -3,10 +3,11 @@
 
 #include <QtWidgets/QProgressBar>
 #include "lib/qtmaterialtheme.h"
+#include "components_global.h"
 
 class QtMaterialProgressPrivate;
 
-class QtMaterialProgress : public QProgressBar
+class COMPONENTS_EXPORT QtMaterialProgress : public QProgressBar
 {
     Q_OBJECT
 

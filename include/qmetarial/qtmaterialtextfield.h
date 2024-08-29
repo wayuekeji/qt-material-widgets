@@ -3,10 +3,11 @@
 
 #include <QColor>
 #include <QtWidgets/QLineEdit>
+#include "components_global.h"
 
 class QtMaterialTextFieldPrivate;
 
-class QtMaterialTextField : public QLineEdit
+class COMPONENTS_EXPORT QtMaterialTextField : public QLineEdit
 {
     Q_OBJECT
 

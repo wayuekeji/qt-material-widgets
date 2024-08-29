@@ -2,9 +2,10 @@
 #define QTMATERIALSTATETRANSITION_H
 
 #include "lib/qtmaterialstatetransitionevent.h"
+#include "components_global.h"
 #include <QAbstractTransition>
 
-class QtMaterialStateTransition : public QAbstractTransition
+class COMPONENTS_EXPORT QtMaterialStateTransition : public QAbstractTransition
 {
     Q_OBJECT
 

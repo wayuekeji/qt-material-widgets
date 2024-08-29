@@ -6,10 +6,11 @@
 #include <QParallelAnimationGroup>
 #include <QPoint>
 #include <QPropertyAnimation>
+#include "components_global.h"
 
 class QtMaterialRippleOverlay;
 
-class QtMaterialRipple : public QParallelAnimationGroup
+class COMPONENTS_EXPORT QtMaterialRipple : public QParallelAnimationGroup
 {
     Q_OBJECT
 

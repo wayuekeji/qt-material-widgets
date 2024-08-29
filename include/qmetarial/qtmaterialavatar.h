@@ -3,10 +3,11 @@
 
 #include "lib/qtmaterialtheme.h"
 #include <QtWidgets/QWidget>
+#include "components_global.h"
 
 class QtMaterialAvatarPrivate;
 
-class QtMaterialAvatar : public QWidget
+class COMPONENTS_EXPORT QtMaterialAvatar : public QWidget
 {
     Q_OBJECT
 

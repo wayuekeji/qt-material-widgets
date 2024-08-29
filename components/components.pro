@@ -5,11 +5,12 @@ unix {
 CONFIG += so
 }
 win32 {
-CONFIG += dll
+DEFINES += COMPONENTS_LIBRARY
 }
 
 INCLUDEPATH += $$top_srcdir/include/qmetarial
 INCLUDEPATH += $$top_srcdir/include/qmetarial/lib
+
 
 SUBDIRS += $$top_srcdir/components
 SUBDIRS += $$top_srcdir/components/materiallib

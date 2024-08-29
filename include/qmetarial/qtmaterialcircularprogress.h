@@ -3,10 +3,11 @@
 
 #include "lib/qtmaterialtheme.h"
 #include <QtWidgets/QProgressBar>
+#include "components_global.h"
 
 class QtMaterialCircularProgressPrivate;
 
-class QtMaterialCircularProgress : public QProgressBar
+class COMPONENTS_EXPORT QtMaterialCircularProgress : public QProgressBar
 {
     Q_OBJECT
 

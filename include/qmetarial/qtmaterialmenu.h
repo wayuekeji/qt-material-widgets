@@ -2,8 +2,9 @@
 #define QTMATERIALMENU_H
 
 #include <QtWidgets/QWidget>
+#include "components_global.h"
 
-class QtMaterialMenu : public QWidget
+class COMPONENTS_EXPORT QtMaterialMenu : public QWidget
 {
     Q_OBJECT
 
