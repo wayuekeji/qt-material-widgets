@@ -29,6 +29,8 @@ The new project will support both qmake and CMake on as many platforms as possib
 
 Download the dynamic library for your platform and unzip it.
 
+***ps: On Windows, you need to download the Release or Debug version depending on the build type.***
+
 #### CMake
 
 If your project uses *CMake*, then add the following to your `CMakeLists.txt`
@@ -43,16 +45,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/dynamic-lib/components.so
 endif()
 ```
 
-#### QMake
+#### qmake
 
-Or if you are use *QMake*, add these two lines to your `.pro` file
+**I encountered some strange problems when building with qmake, such as failure on the first run but subsequent runs working fine, so I recommend using cmake.** If you still choose qmake, add these two lines to your `.pro` file
 
 ```cmake
 LIBS += -L/path/to/dynamic-lib -lcomponents
 INCLUDEPATH += /path/to/dynamic-lib/include
 ```
-
-
 
 ### Run example
 
@@ -387,5 +387,4 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 example can compile and run properly, but UI not fit to mobile.
 
 <img style="width:400px;text-align:center;" src="https://github.com/Zhang-Tianxu/qt-material-widgets/assets/19359257/db116687-3dc3-445f-b41b-3e2594cf0d48" />
-
 
