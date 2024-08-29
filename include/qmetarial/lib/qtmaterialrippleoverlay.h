@@ -2,11 +2,12 @@
 #define QTMATERIALRIPPLEOVERLAY_H
 
 #include "lib/qtmaterialoverlaywidget.h"
+#include "components_global.h"
 #include <QPainterPath>
 
 class QtMaterialRipple;
 
-class QtMaterialRippleOverlay : public QtMaterialOverlayWidget
+class COMPONENTS_EXPORT QtMaterialRippleOverlay : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 

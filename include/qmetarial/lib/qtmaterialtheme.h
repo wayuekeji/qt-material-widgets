@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QObject>
 #include <QScopedPointer>
+#include "components_global.h"
 
 namespace Material {
 enum ButtonPreset { FlatPreset, CheckablePreset };
@@ -292,7 +293,7 @@ enum Color {
 
 class QtMaterialThemePrivate;
 
-class QtMaterialTheme : public QObject
+class COMPONENTS_EXPORT QtMaterialTheme : public QObject
 {
     Q_OBJECT
 

@@ -3,10 +3,11 @@
 
 
 #include <QtWidgets/QComboBox>
+#include "components_global.h"
 
 class QtMaterialComboBoxPrivate;
 
-class QtMaterialComboBox : public QComboBox
+class COMPONENTS_EXPORT QtMaterialComboBox : public QComboBox
 {
     Q_OBJECT
 

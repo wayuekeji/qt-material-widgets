@@ -2,13 +2,14 @@
 #define QTMATERIALTABS_H
 
 #include "lib/qtmaterialtheme.h"
+#include "components_global.h"
 #include <QIcon>
 #include <QtWidgets/QWidget>
 
 class QtMaterialTabsPrivate;
 class QtMaterialTab;
 
-class QtMaterialTabs : public QWidget
+class COMPONENTS_EXPORT QtMaterialTabs : public QWidget
 {
     Q_OBJECT
 

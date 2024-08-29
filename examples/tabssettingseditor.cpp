@@ -44,12 +44,9 @@ TabsSettingsEditor::TabsSettingsEditor(QWidget *parent)
     m_tabs->setMinimumWidth(700);
 
     setupForm();
-    connect(m_tabs, &QtMaterialTabs::currentChanged, this, [](int a) {
-        qInfo() << a << Qt::endl;
-    });
-
-    // connect(ui->useThemeColorsCheckBox, SIGNAL(toggled(bool)), this, SLOT(updateWidget()));
-
+    connect(m_tabs, SIGNAL(currentChanged(int)), this, SLOT([](int a) {
+                qInfo() << a << Qt::endl;
+            }));
 }
 
 TabsSettingsEditor::~TabsSettingsEditor()

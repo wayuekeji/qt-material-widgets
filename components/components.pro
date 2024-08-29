@@ -1,10 +1,18 @@
 QT += core gui widgets
 QT += statemachine
 TEMPLATE = lib
-CONFIG += staticlib
+
+DEFINES += COMPONENTS_LIBRARY
+
+win32 {
+DESTDIR = $$OUT_PWD
+}
+
+message($$DESTDIR)
 
 INCLUDEPATH += $$top_srcdir/include/qmetarial
 INCLUDEPATH += $$top_srcdir/include/qmetarial/lib
+
 
 SUBDIRS += $$top_srcdir/components
 SUBDIRS += $$top_srcdir/components/materiallib

@@ -2,10 +2,11 @@
 #define QTMATERIALICONBUTTON_H
 
 #include <QtWidgets/QAbstractButton>
+#include "components_global.h"
 
 class QtMaterialIconButtonPrivate;
 
-class QtMaterialIconButton : public QAbstractButton
+class COMPONENTS_EXPORT QtMaterialIconButton : public QAbstractButton
 {
     Q_OBJECT
 

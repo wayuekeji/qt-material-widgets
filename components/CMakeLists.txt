@@ -5,6 +5,7 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -14,6 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_definitions(-DCOMPONENTS_LIBRARY=true)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core StateMachine)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core StateMachine)
@@ -27,7 +29,7 @@ file(GLOB HEADER2 "../include/qmetarial/lib/*")
 set(RCC_FILES resources.qrc)
 
 add_library(
-  ${PROJECT_NAME} STATIC ${THELIB} ${COMPONENTSHEADER} ${COMPONENTSSOURCE}
+  ${PROJECT_NAME} SHARED ${THELIB} ${COMPONENTSHEADER} ${COMPONENTSSOURCE}
                          ${RCC_FILES} ${HEADER} ${HEADER2})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -38,5 +40,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/)
+target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/lib)
 
 target_link_directories(${PROJECT_NAME} PUBLIC .)

@@ -1,4 +1,6 @@
-# Qt Material Design Desktop Widgets [![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)]()
+# Qt Material Design Desktop Widgets 
+
+![](https://img.shields.io/badge/Qt-6-green)&nbsp;![](https://img.shields.io/badge/CMake_QMake-red)&nbsp;![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)&nbsp;![](https://img.shields.io/badge/tested_on-windows_ubuntu-blue)
 
 **YouTube** video preview [available here](http://www.youtube.com/watch?v=21UMeNVBPU4).
 
@@ -23,42 +25,36 @@ The new project will support both qmake and CMake on as many platforms as possib
 
 ## Usage
 
-### use in your own project
+### Use as dynamic library
+
+Download the dynamic library for your platform and unzip it.
+
+***ps: On Windows, you need to download the Release or Debug version depending on the build type.***
 
 #### CMake
 
-1. clone this project
+If your project uses *CMake*, then add the following to your `CMakeLists.txt`
 
+```cmake
+target_include_directories(${PROJECT_NAME} PUBLIC /path/to/dynamic-lib/include/)
+if(WIN32)
+target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/dynamic-lib/components.lib)
+endif()
+if(UNIX)
+target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/dynamic-lib/components.so)
+endif()
 ```
-git clone https://github.com/Zhang-Tianxu/qt-material-widgets
-```
-
-2. create your widgets app with CMake build system
-
-Create *Qt Widgets Application* with CMake project as normal
-
-3. modify `CMakeLists.txt` of your app
-    1. add *component* as subdirectory of your project
-    ```CMake
-    add_subdirectory(/path/to/qt-material-widgets/components/ ./components)
-    ```
-    2. add *include* and *link libraries*:
-        - add `/path/to/qt-material-widgets/include/qmeterial/` into `target_include_directories` for headers
-        - add `components` into `target_link_libraries` for `.lib`
-
-Now you can use *qt-material-widgets*, all components list as follows:
 
 #### qmake
 
-1. clone this project
+**I encountered some strange problems when building with qmake, such as failure on the first run but subsequent runs working fine, so I recommend using cmake.** If you still choose qmake, add these two lines to your `.pro` file
 
+```cmake
+LIBS += -L/path/to/dynamic-lib -lcomponents
+INCLUDEPATH += /path/to/dynamic-lib/include
 ```
-git clone https://github.com/Zhang-Tianxu/qt-material-widgets
-```
 
-2. create your widgets app with qmake build system
-
-### example
+### Run example
 
 1. clone this project
 

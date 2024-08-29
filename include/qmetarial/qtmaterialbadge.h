@@ -2,10 +2,11 @@
 #define QTMATERIALBADGE_H
 
 #include "lib/qtmaterialoverlaywidget.h"
+#include "components_global.h"
 
 class QtMaterialBadgePrivate;
 
-class QtMaterialBadge : public QtMaterialOverlayWidget
+class COMPONENTS_EXPORT QtMaterialBadge : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 
