@@ -3,7 +3,12 @@ QT += statemachine
 TEMPLATE = app
 CONFIG += c++11
 
+win32 {
+LIBS += -L$$top_builddir/components -lcomponents
+}
+unix {
 LIBS += -L$$top_builddir/components/$(OBJECTS_DIR) -lcomponents
+}
 INCLUDEPATH += $$top_srcdir/include/qmetarial
 TARGET = examples-exe
 
