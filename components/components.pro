@@ -1,7 +1,12 @@
 QT += core gui widgets
 QT += statemachine
 TEMPLATE = lib
-CONFIG += staticlib
+unix {
+CONFIG += so
+}
+win32 {
+CONFIG += dll
+}
 
 INCLUDEPATH += $$top_srcdir/include/qmetarial
 INCLUDEPATH += $$top_srcdir/include/qmetarial/lib
