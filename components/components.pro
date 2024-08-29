@@ -4,7 +4,11 @@ TEMPLATE = lib
 
 DEFINES += COMPONENTS_LIBRARY
 
+win32 {
 DESTDIR = $$OUT_PWD
+}
+
+message($$DESTDIR)
 
 INCLUDEPATH += $$top_srcdir/include/qmetarial
 INCLUDEPATH += $$top_srcdir/include/qmetarial/lib
