@@ -2,10 +2,11 @@
 #define QTMATERIALCHECKABLE_H
 
 #include <QtWidgets/QAbstractButton>
+#include "components_global.h"
 
 class QtMaterialCheckablePrivate;
 
-class QtMaterialCheckable : public QAbstractButton
+class COMPONENTS_EXPORT QtMaterialCheckable : public QAbstractButton
 {
     Q_OBJECT
 

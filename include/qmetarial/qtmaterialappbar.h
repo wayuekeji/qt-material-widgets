@@ -4,9 +4,11 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include "components_global.h"
+
 class QtMaterialAppBarPrivate;
 
-class QtMaterialAppBar : public QWidget
+class COMPONENTS_EXPORT QtMaterialAppBar : public QWidget
 {
     Q_OBJECT
 

@@ -2,10 +2,11 @@
 #define QTMATERIALRADIOBUTTON_H
 
 #include "lib/qtmaterialcheckable.h"
+#include "components_global.h"
 
 class QtMaterialRadioButtonPrivate;
 
-class QtMaterialRadioButton : public QtMaterialCheckable
+class COMPONENTS_EXPORT QtMaterialRadioButton : public QtMaterialCheckable
 {
     Q_OBJECT
 

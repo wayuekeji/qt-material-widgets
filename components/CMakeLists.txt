@@ -15,6 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_definitions(-DCOMPONENTS_LIBRARY=true)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core StateMachine)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core StateMachine)
@@ -39,5 +40,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/)
+target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/lib)
 
 target_link_directories(${PROJECT_NAME} PUBLIC .)

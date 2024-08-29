@@ -2,12 +2,13 @@
 #define QTMATERIALDIALOG_H
 
 #include "lib/qtmaterialoverlaywidget.h"
+#include "components_global.h"
 #include <QScopedPointer>
 
 class QLayout;
 class QtMaterialDialogPrivate;
 
-class QtMaterialDialog : public QtMaterialOverlayWidget
+class COMPONENTS_EXPORT QtMaterialDialog : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 

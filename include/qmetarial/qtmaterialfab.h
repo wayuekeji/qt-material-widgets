@@ -2,10 +2,11 @@
 #define QTMATERIALFAB_H
 
 #include "qtmaterialraisedbutton.h"
+#include "components_global.h"
 
 class QtMaterialFloatingActionButtonPrivate;
 
-class QtMaterialFloatingActionButton : public QtMaterialRaisedButton
+class COMPONENTS_EXPORT QtMaterialFloatingActionButton : public QtMaterialRaisedButton
 {
     Q_OBJECT
 

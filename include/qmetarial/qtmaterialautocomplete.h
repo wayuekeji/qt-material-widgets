@@ -2,10 +2,11 @@
 #define QTMATERIALAUTOCOMPLETE_H
 
 #include "qtmaterialtextfield.h"
+#include "components_global.h"
 
 class QtMaterialAutoCompletePrivate;
 
-class QtMaterialAutoComplete : public QtMaterialTextField
+class COMPONENTS_EXPORT QtMaterialAutoComplete : public QtMaterialTextField
 {
     Q_OBJECT
 

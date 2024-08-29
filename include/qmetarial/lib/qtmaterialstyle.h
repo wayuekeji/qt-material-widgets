@@ -2,6 +2,7 @@
 #define QTMATERIALSTYLE_H
 
 #include "materiallib/qtmaterialstyle_p.h"
+#include "components_global.h"
 #include <QtWidgets/QCommonStyle>
 
 #define MATERIAL_DISABLE_THEME_COLORS                                                                                            \
@@ -11,7 +12,7 @@
 
 class QtMaterialTheme;
 
-class QtMaterialStyle : public QCommonStyle
+class COMPONENTS_EXPORT QtMaterialStyle : public QCommonStyle
 {
     Q_OBJECT
 

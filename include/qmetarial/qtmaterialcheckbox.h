@@ -2,10 +2,11 @@
 #define QTMATERIALCHECKBOX_H
 
 #include "lib/qtmaterialcheckable.h"
+#include "components_global.h"
 
 class QtMaterialCheckBoxPrivate;
 
-class QtMaterialCheckBox : public QtMaterialCheckable
+class COMPONENTS_EXPORT QtMaterialCheckBox : public QtMaterialCheckable
 {
     Q_OBJECT
 

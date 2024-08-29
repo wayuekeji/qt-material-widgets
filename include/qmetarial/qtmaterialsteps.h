@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include "components_global.h"
 
 class QtMaterialStepsPrivate;
 class QtMaterialSteps;
 
-class QtMaterialSteps : public QWidget
+class COMPONENTS_EXPORT QtMaterialSteps : public QWidget
 {
     Q_OBJECT
 public:
