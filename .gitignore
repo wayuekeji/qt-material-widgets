@@ -4,3 +4,20 @@
 .cache
 *build*/
 
+# Build artifacts
+*.o
+*.so
+*.a
+*.lib
+*.dll
+*.exe
+moc_*
+ui_*.h
+qrc_*.cpp
+Makefile*
+.qmake.stash
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
