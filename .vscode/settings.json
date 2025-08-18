@@ -1,0 +1,26 @@
+{
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "files.associations": {
+        "*.h": "cpp",
+        "*.cpp": "cpp",
+        "*.ui": "xml",
+        "*.qrc": "xml",
+        "*.pro": "qmake",
+        "CMakeLists.txt": "cmake"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "files.exclude": {
+        "**/build*": true,
+        "**/.cache": true,
+        "**/*.pro.user*": true,
+        "**/*.txt.user*": true,
+        "**/*.autosave": true
+    },
+    "search.exclude": {
+        "**/build*": true,
+        "**/.cache": true
+    }
+}
