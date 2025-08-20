@@ -68,7 +68,6 @@
             "args": [
                 "--build", "${workspaceFolder}/build",
                 "--config", "RelWithDebInfo",
-                "--target", "examples",
                 "-j", "8"
             ],
             "options": {
@@ -96,7 +95,6 @@
             "args": [
                 "--build", "${workspaceFolder}/build",
                 "--config", "Debug",
-                "--target", "examples",
                 "-j", "8"
             ],
             "options": {
@@ -124,7 +122,6 @@
             "args": [
                 "--build", "${workspaceFolder}/build",
                 "--config", "Release",
-                "--target", "examples",
                 "-j", "8"
             ],
             "options": {
@@ -151,7 +148,6 @@
             "command": "cmake",
             "args": [
                 "--build", "${workspaceFolder}/build",
-                "--target", "examples",
                 "-j", "8"
             ],
             "options": {

@@ -92,6 +92,7 @@ The project includes platform-specific IntelliSense configurations:
    - macOS: Verify Qt framework installation
 4. **IntelliSense issues**: Check that compile_commands.json is generated in the build directory
 5. **Task not found**: Select the correct configuration for your platform in the C/C++ extension
+6. **Components library not found**: The build tasks automatically build both the `components` library and `examples` executable in the correct order. The `components` library must be built before the `examples` can be linked properly.
 
 ## Platform-Specific Notes
 
