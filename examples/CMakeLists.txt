@@ -13,14 +13,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(WIN32)
-set(COMPONENTS_LIBS
-    ${CMAKE_BINARY_DIR}/components/components.lib # path to .lib
-)
+    # For multi-config generators like Visual Studio, use generator expressions
+    set(COMPONENTS_LIBS
+        ${CMAKE_BINARY_DIR}/components/$<CONFIG>/components.lib
+    )
 endif()
 if(UNIX)
-set(COMPONENTS_LIBS
-    ${CMAKE_BINARY_DIR}/components/libcomponents.so # path to .lib
-)
+    set(COMPONENTS_LIBS
+        ${CMAKE_BINARY_DIR}/components/libcomponents.so
+    )
 endif()
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -68,6 +69,15 @@ target_link_libraries(
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${COMPONENTS_LIBS}
 )
+
+# On Windows, copy the components DLL to the examples output directory
+if(WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_BINARY_DIR}/components/$<CONFIG>/components.dll
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
+endif()
 
 set_target_properties(
   ${PROJECT_NAME} PROPERTIES
