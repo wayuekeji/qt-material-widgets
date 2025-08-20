@@ -17,8 +17,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_definitions(-DCOMPONENTS_LIBRARY=true)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core StateMachine)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core StateMachine)
 
 file(GLOB THELIB "materiallib/*") # 利用正则表达式找出源文件
 file(GLOB COMPONENTSHEADER "*.h")
@@ -36,7 +36,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
-    # Qt${QT_VERSION_MAJOR}::StateMachine
+    Qt${QT_VERSION_MAJOR}::StateMachine
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/)
