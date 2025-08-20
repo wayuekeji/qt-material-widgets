@@ -402,6 +402,7 @@ void QtMaterialCheckable::mousePressEvent(QMouseEvent *event)
     d->rippleOverlay->addRipple(ripple);
 
     setChecked(!isChecked());
+    emit clicked(isChecked());
 }
 
 /*!

@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch qt-material-widgets (Windows Debug)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/examples/Debug/examples.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/examples/Debug",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${env:CMAKE_PREFIX_PATH}/bin"
+                }
+            ],
+            "preLaunchTask": "cmake-build-debug",
+            "externalConsole": false
+        },
+    ]
+}
