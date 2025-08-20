@@ -48,7 +48,7 @@ void ComboBoxSettingsEditor::init()
     connect(ui->backgroundColorToolButton, &QToolButton::clicked, this, [=](bool checked){
         selectColor();
     });
-    connect(ui->fontSizeDoubleSpinBox, &QDoubleSpinBox::valueChanged, this, [=](double value){
+    connect(ui->fontSizeDoubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [=](double value){
         m_combobox->setFontSize(value);
     });
 
