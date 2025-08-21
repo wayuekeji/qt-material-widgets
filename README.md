@@ -344,6 +344,7 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 - [x] Check Box
 - [x] Circular Progress
 - [x] Dialog
+- [x] Divider
 - [x] Drawer
 - [x] Floating Action Button
 - [x] Flat Button
@@ -360,7 +361,6 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 
 #### Work in progress
 
-- [ ] Divider
 - [ ] ComboBox
 
 #### Not implemented 
