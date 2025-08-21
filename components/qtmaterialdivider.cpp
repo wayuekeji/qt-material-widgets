@@ -279,45 +279,43 @@ void QtMaterialDivider::paintEvent(QPaintEvent *event)
 
         switch (d->textAlignment) {
             case Left: {
-                textRect = QRect(r.left() + padding, centerY - textHeight/2, textWidth, textHeight);
-                lineLeft = textRect.right() + padding;
+                textRect = QRect(r.left() + 2 * padding, centerY - textHeight/2, textWidth, textHeight);
+                // left line: from r.left() to textRect.left() - padding
+                if (r.left() < textRect.left() - padding) {
+                    painter.drawLine(r.left(), centerY, textRect.left() - padding, centerY);
+                }
+                // right line: from textRect.right() + padding to r.right()
+                if (textRect.right() + padding < r.right()) {
+                    painter.drawLine(textRect.right() + padding, centerY, r.right(), centerY);
+                }
                 break;
             }
             case Right: {
-                textRect = QRect(r.right() - textWidth - padding, centerY - textHeight/2, textWidth, textHeight);
-                lineRight = textRect.left() - padding;
+                textRect = QRect(r.right() - textWidth - 2 * padding, centerY - textHeight/2, textWidth, textHeight);
+                // left line: from r.left() to textRect.left() - padding
+                if (r.left() < textRect.left() - padding) {
+                    painter.drawLine(r.left(), centerY, textRect.left() - padding, centerY);
+                }
+                // right line: from textRect.right() + padding to r.right()
+                if (textRect.right() + padding < r.right()) {
+                    painter.drawLine(textRect.right() + padding, centerY, r.right(), centerY);
+                }
                 break;
             }
             case Center:
             default: {
                 textRect = QRect((r.width() - textWidth) / 2, centerY - textHeight/2, textWidth, textHeight);
-                lineLeft = r.left();
-                lineRight = textRect.left() - padding;
+                int lineLeft = r.left();
+                int lineRight = textRect.left() - padding;
+                if (lineLeft < lineRight) {
+                    painter.drawLine(lineLeft, centerY, lineRight, centerY);
+                }
+                int rightLineStart = textRect.right() + padding;
+                if (rightLineStart < r.right()) {
+                    painter.drawLine(rightLineStart, centerY, r.right(), centerY);
+                }
                 break;
             }
-        }
-
-        // Draw left line (if needed)
-        if (lineLeft < lineRight && (d->textAlignment == Center || d->textAlignment == Right)) {
-            painter.drawLine(lineLeft, centerY, lineRight, centerY);
-        }
-
-        // Draw right line (if needed and for center alignment)
-        if (d->textAlignment == Center) {
-            int rightLineStart = textRect.right() + padding;
-            if (rightLineStart < r.right()) {
-                painter.drawLine(rightLineStart, centerY, r.right(), centerY);
-            }
-        }
-        
-        // Draw left line for left alignment (right side of text)
-        if (d->textAlignment == Left && lineLeft < r.right()) {
-            painter.drawLine(lineLeft, centerY, r.right(), centerY);
-        }
-        
-        // Draw right line for right alignment (left side of text) 
-        if (d->textAlignment == Right && r.left() < lineRight) {
-            painter.drawLine(r.left(), centerY, lineRight, centerY);
         }
 
         // Draw text
