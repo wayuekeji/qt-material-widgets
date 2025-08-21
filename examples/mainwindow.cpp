@@ -26,6 +26,7 @@
 #include "menusettingseditor.h"
 #include "comboboxsettingseditor.h"
 #include "dividersettingseditor.h"
+#include <QMap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -71,66 +72,43 @@ MainWindow::MainWindow(QWidget *parent)
     ComboBoxSettingsEditor *combobox = new ComboBoxSettingsEditor;
     DividerSettingsEditor *divider = new DividerSettingsEditor;
 
-    stack->addWidget(appBar);
-    stack->addWidget(autocomplete);
-    stack->addWidget(avatar);
-    stack->addWidget(badge);
-    stack->addWidget(checkbox);
-    stack->addWidget(circularProgress);
-    stack->addWidget(combobox);
-    stack->addWidget(dialog);
-    stack->addWidget(divider);
-    stack->addWidget(drawer);
-    stack->addWidget(fab);
-    stack->addWidget(flatButton);
-    stack->addWidget(iconButton);
-    stack->addWidget(menu);
-    stack->addWidget(progress);
-    stack->addWidget(radioButton);
-    stack->addWidget(raisedButton);
-    stack->addWidget(scrollBar);
-    stack->addWidget(slider);
-    stack->addWidget(snackbar);
-    stack->addWidget(tabs);
-    stack->addWidget(steps);
-    stack->addWidget(textField);
-    stack->addWidget(toggle);
-    stack->addWidget(combobox);
+    QMap<QString, QWidget*> pageMap = {
+        {"App Bar", appBar},
+        {"Auto Complete", autocomplete},
+        {"Avatar", avatar},
+        {"Badge", badge},
+        {"Checkbox", checkbox},
+        {"Circular Progress", circularProgress},
+        {"ComboBox", combobox},
+        {"Dialog", dialog},
+        {"Divider", divider},
+        {"Drawer", drawer},
+        {"Floating Action Button", fab},
+        {"Flat Button", flatButton},
+        {"Icon Button", iconButton},
+        {"Menu", menu},
+        {"Progress", progress},
+        {"Radio Button", radioButton},
+        {"Raised Button", raisedButton},
+        {"ScrollBar", scrollBar},
+        {"Slider", slider},
+        {"Snackbar", snackbar},
+        {"Tabs", tabs},
+        {"Steps", steps},
+        {"Text Field", textField},
+        {"Toggle", toggle}
+    };
 
-    list->addItem("App Bar");
-    list->addItem("Auto Complete");
-    list->addItem("Avatar");
-    list->addItem("Badge");
-    list->addItem("Checkbox");
-    list->addItem("Circular Progress");
-    list->addItem("combobox");
-    list->addItem("Dialog");
-    list->addItem("Divider");
-    list->addItem("Drawer");
-    list->addItem("Floating Action Button");
-    list->addItem("Flat Button");
-    list->addItem("Icon Button");
-    list->addItem("Menu");
-    list->addItem("Progress");
-    list->addItem("Radio Button");
-    list->addItem("Raised Button");
-    list->addItem("ScrollBar");
-    list->addItem("Slider");
-    list->addItem("Snackbar");
-    list->addItem("Tabs");
-    list->addItem("Steps");
-    list->addItem("Text Field");
-    list->addItem("Toggle");
-    list->addItem("combobox");
+    for (auto it = pageMap.begin(); it != pageMap.end(); ++it) {
+        list->addItem(it.key());
+        stack->addWidget(it.value());
+    }
 
     list->setCurrentRow(0);
 
-    QObject::connect(list,  &QListWidget::currentItemChanged,
-        [=](QListWidgetItem *current, QListWidgetItem *previous)
-    {
-        Q_UNUSED(current)
-        Q_UNUSED(previous)
-        stack->setCurrentIndex(list->currentRow());
+    QObject::connect(list, &QListWidget::currentTextChanged, [=](const QString &text){
+        QWidget *w = pageMap.value(text, nullptr);
+        if (w) stack->setCurrentWidget(w);
     });
 }
 
