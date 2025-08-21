@@ -25,6 +25,7 @@
 #include "autocompletesettingseditor.h"
 #include "menusettingseditor.h"
 #include "comboboxsettingseditor.h"
+#include "dividersettingseditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     AutoCompleteSettingsEditor *autocomplete = new AutoCompleteSettingsEditor;
     MenuSettingsEditor *menu = new MenuSettingsEditor;
     ComboBoxSettingsEditor *combobox = new ComboBoxSettingsEditor;
+    DividerSettingsEditor *divider = new DividerSettingsEditor;
 
     stack->addWidget(appBar);
     stack->addWidget(autocomplete);
@@ -75,7 +77,9 @@ MainWindow::MainWindow(QWidget *parent)
     stack->addWidget(badge);
     stack->addWidget(checkbox);
     stack->addWidget(circularProgress);
+    stack->addWidget(combobox);
     stack->addWidget(dialog);
+    stack->addWidget(divider);
     stack->addWidget(drawer);
     stack->addWidget(fab);
     stack->addWidget(flatButton);
@@ -99,7 +103,9 @@ MainWindow::MainWindow(QWidget *parent)
     list->addItem("Badge");
     list->addItem("Checkbox");
     list->addItem("Circular Progress");
+    list->addItem("combobox");
     list->addItem("Dialog");
+    list->addItem("Divider");
     list->addItem("Drawer");
     list->addItem("Floating Action Button");
     list->addItem("Flat Button");
