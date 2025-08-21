@@ -33,6 +33,7 @@ private:
     QtMaterialDivider *const m_divider1;
     QtMaterialDivider *const m_divider2;
     QtMaterialDivider *const m_divider3;
+    QtMaterialDivider *m_divider4; // Divider with Left Text
     
     QVBoxLayout *m_settingsLayout;
     QCheckBox *m_disabledCheckBox;

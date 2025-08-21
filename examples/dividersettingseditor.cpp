@@ -15,7 +15,8 @@ DividerSettingsEditor::DividerSettingsEditor(QWidget *parent)
     : QWidget(parent),
       m_divider1(new QtMaterialDivider()),
       m_divider2(new QtMaterialDivider("Material Design")),
-      m_divider3(new QtMaterialDivider("Right Text"))
+      m_divider3(new QtMaterialDivider("Right Text")),
+      m_divider4(nullptr)
 {
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
@@ -95,6 +96,12 @@ DividerSettingsEditor::DividerSettingsEditor(QWidget *parent)
     canvasLayout->addWidget(m_divider2);
     canvasLayout->addSpacing(20);
     
+    canvasLayout->addWidget(new QLabel("Divider with Left Text:"));
+    m_divider4 = new QtMaterialDivider("Left Text");
+    m_divider4->setTextAlignment(QtMaterialDivider::Left);
+    canvasLayout->addWidget(m_divider4);
+    canvasLayout->addSpacing(20);
+    
     canvasLayout->addWidget(new QLabel("Divider with Right Text:"));
     m_divider3->setTextAlignment(QtMaterialDivider::Right);
     canvasLayout->addWidget(m_divider3);
@@ -116,6 +123,7 @@ DividerSettingsEditor::DividerSettingsEditor(QWidget *parent)
 
 DividerSettingsEditor::~DividerSettingsEditor()
 {
+    delete m_divider4;
 }
 
 void DividerSettingsEditor::setupForm()
@@ -126,15 +134,15 @@ void DividerSettingsEditor::setupForm()
 void DividerSettingsEditor::updateWidget()
 {
     // Update all dividers with current settings
-    QtMaterialDivider *dividers[] = {m_divider1, m_divider2, m_divider3};
+    QtMaterialDivider *dividers[] = {m_divider1, m_divider2, m_divider3, m_divider4};
     
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         QtMaterialDivider *divider = dividers[i];
         
         divider->setEnabled(!m_disabledCheckBox->isChecked());
         divider->setUseThemeColors(m_useThemeColorsCheckBox->isChecked());
         
-        // Set text only for dividers 2 and 3, divider 1 is simple line
+        // Set text only for dividers 2, 3, 4; divider 1 is simple line
         if (i > 0) {
             divider->setText(m_textLineEdit->text());
             
@@ -154,8 +162,9 @@ void DividerSettingsEditor::updateWidget()
         divider->setLineThickness(m_thicknessSpinBox->value());
     }
     
-    // Set specific alignment for divider3
+    // Set specific alignment for divider3 and divider4
     m_divider3->setTextAlignment(QtMaterialDivider::Right);
+    m_divider4->setTextAlignment(QtMaterialDivider::Left);
 }
 
 void DividerSettingsEditor::selectLineColor()
@@ -165,7 +174,7 @@ void DividerSettingsEditor::selectLineColor()
 
     if (dialog.exec()) {
         QColor color = dialog.selectedColor();
-        for (QtMaterialDivider *divider : {m_divider1, m_divider2, m_divider3}) {
+        for (QtMaterialDivider *divider : {m_divider1, m_divider2, m_divider3, m_divider4}) {
             divider->setLineColor(color);
         }
     }
@@ -178,7 +187,7 @@ void DividerSettingsEditor::selectTextColor()
 
     if (dialog.exec()) {
         QColor color = dialog.selectedColor();
-        for (QtMaterialDivider *divider : {m_divider1, m_divider2, m_divider3}) {
+        for (QtMaterialDivider *divider : {m_divider1, m_divider2, m_divider3, m_divider4}) {
             divider->setTextColor(color);
         }
     }
