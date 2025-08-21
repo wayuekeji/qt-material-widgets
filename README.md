@@ -332,6 +332,19 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
         <img src="gifs/toggle.gif" />
       </td>
     </tr>
+    <tr>
+      <td>
+        Divider
+      </td>
+      <td>
+        <code>QtMaterialDivider</code>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="gifs/divider.gif" />
+      </td>
+    </tr>
   </tbody>
 </table>
 
