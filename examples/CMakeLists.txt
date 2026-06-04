@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.22)
 
 project(
   examples
-  VERSION 0.1
+  VERSION 0.1.0
   LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
@@ -11,18 +11,6 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(WIN32)
-    # For multi-config generators like Visual Studio, use generator expressions
-    set(COMPONENTS_LIBS
-        ${CMAKE_BINARY_DIR}/components/$<CONFIG>/components.lib
-    )
-endif()
-if(UNIX)
-    set(COMPONENTS_LIBS
-        ${CMAKE_BINARY_DIR}/components/libcomponents.so
-    )
-endif()
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
@@ -59,22 +47,18 @@ else()
     endif()
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ../include/qmetarial/)
 target_link_libraries(
   ${PROJECT_NAME} PRIVATE
+  QtMaterialWidgets::Widgets
   Qt${QT_VERSION_MAJOR}::Widgets
   Qt${QT_VERSION_MAJOR}::Core
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${COMPONENTS_LIBS}
 )
 
 # On Windows, copy the components DLL to the examples output directory
 if(WIN32)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_BINARY_DIR}/components/$<CONFIG>/components.dll
+        $<TARGET_FILE:QtMaterialWidgets>
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
 endif()

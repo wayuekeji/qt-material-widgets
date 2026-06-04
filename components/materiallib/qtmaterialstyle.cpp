@@ -1,6 +1,7 @@
 #include <QFontDatabase>
 #include <lib/qtmaterialstyle.h>
 #include <lib/qtmaterialtheme.h>
+#include "qtmaterialstyle_p.h"
 
 /*!
  *  @class QtMaterialStylePrivate
@@ -53,3 +54,5 @@ QtMaterialStyle::QtMaterialStyle()
 {
     d_func()->init();
 }
+
+QtMaterialStyle::~QtMaterialStyle() = default;

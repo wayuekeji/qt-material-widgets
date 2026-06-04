@@ -1,8 +1,8 @@
 #ifndef QTMATERIALSTYLE_H
 #define QTMATERIALSTYLE_H
 
-#include "materiallib/qtmaterialstyle_p.h"
 #include "components_global.h"
+#include <QScopedPointer>
 #include <QtWidgets/QCommonStyle>
 
 #define MATERIAL_DISABLE_THEME_COLORS                                                                                            \
@@ -11,6 +11,7 @@
     }
 
 class QtMaterialTheme;
+class QtMaterialStylePrivate;
 
 class COMPONENTS_EXPORT QtMaterialStyle : public QCommonStyle
 {
@@ -18,6 +19,7 @@ class COMPONENTS_EXPORT QtMaterialStyle : public QCommonStyle
 
 public:
     inline static QtMaterialStyle &instance();
+    ~QtMaterialStyle();
 
     void setTheme(QtMaterialTheme *theme);
     QColor themeColor(const QString &key) const;

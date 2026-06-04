@@ -1,6 +1,24 @@
 cmake_minimum_required(VERSION 3.22)
-project(qt-material-widgets)
+project(
+  qt-material-widgets
+  VERSION 0.1.0
+  LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(PROJECT_IS_TOP_LEVEL)
+  set(QTMATERIALWIDGETS_BUILD_EXAMPLES_DEFAULT ON)
+else()
+  set(QTMATERIALWIDGETS_BUILD_EXAMPLES_DEFAULT OFF)
+endif()
+
+option(QTMATERIALWIDGETS_BUILD_EXAMPLES "Build the example application"
+       ${QTMATERIALWIDGETS_BUILD_EXAMPLES_DEFAULT})
+
+unset(QTMATERIALWIDGETS_BUILD_EXAMPLES_DEFAULT)
+
 add_subdirectory(components)
-add_subdirectory(examples)
+
+if(QTMATERIALWIDGETS_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
