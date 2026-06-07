@@ -15,71 +15,66 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-file(GLOB HEADER "*.h")
-file(GLOB RSOURCE "*.cpp")
-file(GLOB UI "*.ui")
+include(sources.cmake)
 
 set(RCC_FILES examples.qrc)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${PROJECT_NAME}
-        MANUAL_FINALIZATION
-        ${HEADER}
-        ${RSOURCE}
-        ${UI}
-        ${RCC_FILES}
-    )
+  qt_add_executable(
+    ${PROJECT_NAME}
+    MANUAL_FINALIZATION
+    ${QTMATERIALWIDGETS_EXAMPLE_HEADERS}
+    ${QTMATERIALWIDGETS_EXAMPLE_SOURCES}
+    ${QTMATERIALWIDGETS_EXAMPLE_UI}
+    ${RCC_FILES})
 else()
-    if(ANDROID)
-        add_library(${PROJECT_NAME} SHARED
-                ${HEADER}
-                ${RSOURCE}
-                ${UI}
-                ${RCC_FILES}
-        )
-    else()
-        add_executable(${PROJECT_NAME}
-                ${HEADER}
-                ${RSOURCE}
-                ${UI}
-                ${RCC_FILES}
-        )
-    endif()
+  if(ANDROID)
+    add_library(
+      ${PROJECT_NAME}
+      SHARED
+      ${QTMATERIALWIDGETS_EXAMPLE_HEADERS}
+      ${QTMATERIALWIDGETS_EXAMPLE_SOURCES}
+      ${QTMATERIALWIDGETS_EXAMPLE_UI}
+      ${RCC_FILES})
+  else()
+    add_executable(
+      ${PROJECT_NAME}
+      ${QTMATERIALWIDGETS_EXAMPLE_HEADERS}
+      ${QTMATERIALWIDGETS_EXAMPLE_SOURCES}
+      ${QTMATERIALWIDGETS_EXAMPLE_UI}
+      ${RCC_FILES})
+  endif()
 endif()
 
 target_link_libraries(
-  ${PROJECT_NAME} PRIVATE
-  QtMaterialWidgets::Widgets
-  Qt${QT_VERSION_MAJOR}::Widgets
-  Qt${QT_VERSION_MAJOR}::Core
-)
+  ${PROJECT_NAME} PRIVATE QtMaterialWidgets::Widgets Qt${QT_VERSION_MAJOR}::Widgets
+                          Qt${QT_VERSION_MAJOR}::Core)
 
-# On Windows, copy the components DLL to the examples output directory
 if(WIN32)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:QtMaterialWidgets>
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    )
+  add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:QtMaterialWidgets> $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endif()
 
 set_target_properties(
-  ${PROJECT_NAME} PROPERTIES
-  ${BUNDLE_ID_OPTION}
-  MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-  MACOSX_BUNDLE_SHORT_VERSION_STRING
-  ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-  MACOSX_BUNDLE TRUE
-  WIN32_EXECUTABLE TRUE
-)
+  ${PROJECT_NAME}
+  PROPERTIES
+    ${BUNDLE_ID_OPTION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING
+    ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE)
 
 include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+install(
+  TARGETS ${PROJECT_NAME}
+  BUNDLE DESTINATION .
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(${PROJECT_NAME})
+  qt_finalize_executable(${PROJECT_NAME})
 endif()

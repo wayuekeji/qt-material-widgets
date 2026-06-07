@@ -1,7 +1,12 @@
+#
+# Legacy qmake example project.
+# CMake is the supported build, package, and downstream integration path.
+#
+
 QT += core gui widgets
 QT += statemachine
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++17
 
 win32 {
 LIBS += -L$$top_builddir/components -lcomponents
