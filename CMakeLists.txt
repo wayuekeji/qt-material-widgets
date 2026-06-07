@@ -22,3 +22,8 @@ add_subdirectory(components)
 if(QTMATERIALWIDGETS_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
+
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()

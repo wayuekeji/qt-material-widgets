@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  cmake:
+    name: CMake Qt ${{ matrix.qt-version }} ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        qt-version:
+          - 6.6.3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build build-essential libgl1-mesa-dev libxkbcommon-x11-0
+
+      - name: Install Windows build dependencies
+        if: runner.os == 'Windows'
+        run: choco install ninja -y
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.qt-version }}
+          modules: qtstatemachine
+          cache: true
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DQTMATERIALWIDGETS_BUILD_EXAMPLES=ON
+          -DQTMATERIALWIDGETS_BUILD_FULL_ICON_PACK=OFF
+          -DBUILD_TESTING=ON
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Test
+        run: ctest --test-dir build --build-config Release --output-on-failure
+
+      - name: Build examples
+        run: cmake --build build --config Release --target examples --parallel
+
+      - name: Install package
+        run: cmake --install build --config Release --prefix "${{ github.workspace }}/install"
+
+      - name: Configure consumer
+        run: >
+          cmake -S examples/consumer -B build-consumer -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_PREFIX_PATH="${{ github.workspace }}/install"
+
+      - name: Build consumer
+        run: cmake --build build-consumer --config Release --parallel
