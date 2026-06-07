@@ -6,7 +6,7 @@
 
 class QtMaterialCheckBoxPrivate;
 
-class COMPONENTS_EXPORT QtMaterialCheckBox : public QtMaterialCheckable
+class QTMATERIALWIDGETS_EXPORT QtMaterialCheckBox : public QtMaterialCheckable
 {
     Q_OBJECT
 

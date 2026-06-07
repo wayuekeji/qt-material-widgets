@@ -8,7 +8,7 @@
 class QtMaterialStepsPrivate;
 class QtMaterialSteps;
 
-class COMPONENTS_EXPORT QtMaterialSteps : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialSteps : public QWidget
 {
     Q_OBJECT
 public:

@@ -10,7 +10,7 @@
 
 class QtMaterialRippleOverlay;
 
-class COMPONENTS_EXPORT QtMaterialRipple : public QParallelAnimationGroup
+class QTMATERIALWIDGETS_EXPORT QtMaterialRipple : public QParallelAnimationGroup
 {
     Q_OBJECT
 

@@ -6,7 +6,7 @@
 
 class QtMaterialRaisedButtonPrivate;
 
-class COMPONENTS_EXPORT QtMaterialRaisedButton : public QtMaterialFlatButton
+class QTMATERIALWIDGETS_EXPORT QtMaterialRaisedButton : public QtMaterialFlatButton
 {
     Q_OBJECT
 

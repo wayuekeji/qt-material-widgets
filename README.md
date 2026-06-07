@@ -1,6 +1,6 @@
 # Qt Material Design Desktop Widgets 
 
-![](https://img.shields.io/badge/Qt-6-green)&nbsp;![](https://img.shields.io/badge/CMake_QMake-red)&nbsp;![Language](https://img.shields.io/badge/language-c++-brightgreen.svg)&nbsp;![](https://img.shields.io/badge/tested_on-windows_ubuntu-blue)
+![](https://img.shields.io/badge/Qt-6-green)&nbsp;![](https://img.shields.io/badge/CMake-supported-green)&nbsp;![Language](https://img.shields.io/badge/language-c++17-brightgreen.svg)&nbsp;![](https://img.shields.io/badge/tested_on-windows_ubuntu-blue)
 
 **YouTube** video preview [available here](http://www.youtube.com/watch?v=21UMeNVBPU4).
 
@@ -18,41 +18,50 @@ I'm very honored to try to take over the maintenance of this project, and welcom
 
 ## Overview
 
-The original project only supports the qmake build system on Linux platform.
+The original project only supported the qmake build system on Linux.
 
-The new project will support both qmake and CMake on as many platforms as possible, mainly Windows, Android ,Linux and MacOS.
+This project now treats CMake as the supported build, package, and downstream integration path. qmake files remain as legacy source-tree build files only.
 
 
 ## Usage
 
-### Use as dynamic library
+### Use as a CMake package
 
-Download the dynamic library for your platform and unzip it.
+The recommended integration path is the exported CMake package.
 
-***ps: On Windows, you need to download the Release or Debug version depending on the build type.***
-
-#### CMake
-
-If your project uses *CMake*, then add the following to your `CMakeLists.txt`
+Build and install the library first:
 
 ```cmake
-target_include_directories(${PROJECT_NAME} PUBLIC /path/to/dynamic-lib/include/)
-if(WIN32)
-target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/dynamic-lib/components.lib)
-endif()
-if(UNIX)
-target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/dynamic-lib/components.so)
-endif()
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/path/to/install
+cmake --build build --config Release
+cmake --install build --config Release
 ```
 
-#### qmake
-
-**I encountered some strange problems when building with qmake, such as failure on the first run but subsequent runs working fine, so I recommend using cmake.** If you still choose qmake, add these two lines to your `.pro` file
+Then consume it from your application:
 
 ```cmake
-LIBS += -L/path/to/dynamic-lib -lcomponents
-INCLUDEPATH += /path/to/dynamic-lib/include
+find_package(QtMaterialWidgets CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE QtMaterialWidgets::Widgets)
 ```
+
+When the install prefix is not in CMake's default search path, configure your application with `-DCMAKE_PREFIX_PATH=/path/to/install`.
+
+The minimal installed-package consumer is available in `examples/consumer`.
+
+### Use as a source subdirectory
+
+You can also embed this repository in another CMake build:
+
+```cmake
+add_subdirectory(path/to/qt-material-widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE QtMaterialWidgets::Widgets)
+```
+
+### qmake
+
+`qmake` files are still present for legacy local experimentation, but qmake is not part of the verified support contract. It does not provide the CMake package target, install/export rules, resource-pack option, or CTest baseline.
+
+Use the CMake package path for supported downstream integration.
 
 ### Run example
 
@@ -62,7 +71,7 @@ INCLUDEPATH += /path/to/dynamic-lib/include
 git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 ```
 
-2. open `CMakeLists.txt`/`qt-material-widgets.pro` in root directory of this repo by Qt Creator
+2. open `CMakeLists.txt` in the root directory of this repo by Qt Creator
 3. select a build Kit and run
 
 ## progress
@@ -350,6 +359,8 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 
 #### Implemented components
 
+Detailed installation status is tracked in [Docs/ComponentSurface.md](Docs/ComponentSurface.md).
+
 - [x] App Bar
 - [x] Auto Complete
 - [x] Avatar
@@ -375,6 +386,11 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 #### Work in progress
 
 - [ ] ComboBox
+- [ ] Steps
+
+#### Stub
+
+- [ ] Menu
 
 #### Not implemented 
 
@@ -390,7 +406,6 @@ git clone https://github.com/Zhang-Tianxu/qt-material-widgets
 - [ ] Toolbar
 - [ ] List
 - [ ] List Item
-- [ ] Menu
 - [ ] Paper
 - [ ] Snackbar Layout
 - [ ] Table

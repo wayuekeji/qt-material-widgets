@@ -6,7 +6,7 @@
 
 class QtMaterialBadgePrivate;
 
-class COMPONENTS_EXPORT QtMaterialBadge : public QtMaterialOverlayWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialBadge : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 

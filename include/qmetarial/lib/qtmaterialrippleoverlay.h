@@ -7,7 +7,7 @@
 
 class QtMaterialRipple;
 
-class COMPONENTS_EXPORT QtMaterialRippleOverlay : public QtMaterialOverlayWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialRippleOverlay : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 

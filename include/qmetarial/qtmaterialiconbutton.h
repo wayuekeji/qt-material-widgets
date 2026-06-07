@@ -6,7 +6,7 @@
 
 class QtMaterialIconButtonPrivate;
 
-class COMPONENTS_EXPORT QtMaterialIconButton : public QAbstractButton
+class QTMATERIALWIDGETS_EXPORT QtMaterialIconButton : public QAbstractButton
 {
     Q_OBJECT
 

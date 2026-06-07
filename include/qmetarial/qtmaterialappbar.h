@@ -8,7 +8,7 @@
 
 class QtMaterialAppBarPrivate;
 
-class COMPONENTS_EXPORT QtMaterialAppBar : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialAppBar : public QWidget
 {
     Q_OBJECT
 

@@ -22,6 +22,24 @@ enum ProgressType { DeterminateProgress, IndeterminateProgress };
 
 enum AvatarType { ImageAvatar, IconAvatar, LetterAvatar };
 
+enum class ThemeColor {
+    Primary1,
+    Primary2,
+    Primary3,
+    Accent1,
+    Accent2,
+    Accent3,
+    Text,
+    AlternateText,
+    Canvas,
+    Border,
+    Disabled,
+    Disabled2,
+    Disabled3
+};
+
+QTMATERIALWIDGETS_EXPORT const char *themeColorKey(ThemeColor key);
+
 enum Color {
     red50,
     red100,
@@ -293,7 +311,7 @@ enum Color {
 
 class QtMaterialThemePrivate;
 
-class COMPONENTS_EXPORT QtMaterialTheme : public QObject
+class QTMATERIALWIDGETS_EXPORT QtMaterialTheme : public QObject
 {
     Q_OBJECT
 
@@ -302,9 +320,12 @@ public:
     ~QtMaterialTheme();
 
     QColor getColor(const QString &key) const;
+    QColor getColor(Material::ThemeColor key) const;
 
     void setColor(const QString &key, const QColor &color);
     void setColor(const QString &key, Material::Color color);
+    void setColor(Material::ThemeColor key, const QColor &color);
+    void setColor(Material::ThemeColor key, Material::Color color);
 
     static QIcon icon(QString category, QString icon);
 

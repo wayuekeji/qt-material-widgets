@@ -101,7 +101,7 @@ QColor QtMaterialSnackbar::backgroundColor() const
     Q_D(const QtMaterialSnackbar);
 
     if (d->useThemeColors || !d->backgroundColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     } else {
         return d->backgroundColor;
     }
@@ -137,7 +137,7 @@ QColor QtMaterialSnackbar::textColor() const
     Q_D(const QtMaterialSnackbar);
 
     if (d->useThemeColors || !d->textColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("canvas");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Canvas);
     } else {
         return d->textColor;
     }

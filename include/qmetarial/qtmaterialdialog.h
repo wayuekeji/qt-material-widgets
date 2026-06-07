@@ -8,7 +8,7 @@
 class QLayout;
 class QtMaterialDialogPrivate;
 
-class COMPONENTS_EXPORT QtMaterialDialog : public QtMaterialOverlayWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialDialog : public QtMaterialOverlayWidget
 {
     Q_OBJECT
 

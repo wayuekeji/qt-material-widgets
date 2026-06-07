@@ -4,7 +4,7 @@
 #include <QtWidgets/QWidget>
 #include "components_global.h"
 
-class COMPONENTS_EXPORT QtMaterialOverlayWidget : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialOverlayWidget : public QWidget
 {
     Q_OBJECT
 

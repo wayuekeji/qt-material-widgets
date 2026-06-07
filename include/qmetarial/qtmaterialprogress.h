@@ -7,12 +7,12 @@
 
 class QtMaterialProgressPrivate;
 
-class COMPONENTS_EXPORT QtMaterialProgress : public QProgressBar
+class QTMATERIALWIDGETS_EXPORT QtMaterialProgress : public QProgressBar
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor progressColor WRITE setProgressColor READ progressColor)
-    Q_PROPERTY(QColor backgroundColor WRITE setProgressColor READ backgroundColor)
+    Q_PROPERTY(QColor backgroundColor WRITE setBackgroundColor READ backgroundColor)
 
 public:
     explicit QtMaterialProgress(QWidget *parent = 0);

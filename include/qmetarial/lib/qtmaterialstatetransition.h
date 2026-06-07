@@ -5,7 +5,7 @@
 #include "components_global.h"
 #include <QAbstractTransition>
 
-class COMPONENTS_EXPORT QtMaterialStateTransition : public QAbstractTransition
+class QTMATERIALWIDGETS_EXPORT QtMaterialStateTransition : public QAbstractTransition
 {
     Q_OBJECT
 

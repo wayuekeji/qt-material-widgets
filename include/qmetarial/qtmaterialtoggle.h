@@ -6,7 +6,7 @@
 
 class QtMaterialTogglePrivate;
 
-class COMPONENTS_EXPORT QtMaterialToggle : public QAbstractButton
+class QTMATERIALWIDGETS_EXPORT QtMaterialToggle : public QAbstractButton
 {
     Q_OBJECT
 

@@ -154,7 +154,7 @@ QColor QtMaterialDivider::lineColor() const
     Q_D(const QtMaterialDivider);
 
     if (d->useThemeColors || !d->lineColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("border");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Border);
     } else {
         return d->lineColor;
     }
@@ -175,7 +175,7 @@ QColor QtMaterialDivider::textColor() const
     Q_D(const QtMaterialDivider);
 
     if (d->useThemeColors || !d->textColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     } else {
         return d->textColor;
     }

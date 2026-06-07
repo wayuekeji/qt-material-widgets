@@ -7,7 +7,7 @@
 
 class QtMaterialComboBoxPrivate;
 
-class COMPONENTS_EXPORT QtMaterialComboBox : public QComboBox
+class QTMATERIALWIDGETS_EXPORT QtMaterialComboBox : public QComboBox
 {
     Q_OBJECT
 

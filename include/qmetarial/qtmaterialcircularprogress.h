@@ -7,7 +7,7 @@
 
 class QtMaterialCircularProgressPrivate;
 
-class COMPONENTS_EXPORT QtMaterialCircularProgress : public QProgressBar
+class QTMATERIALWIDGETS_EXPORT QtMaterialCircularProgress : public QProgressBar
 {
     Q_OBJECT
 

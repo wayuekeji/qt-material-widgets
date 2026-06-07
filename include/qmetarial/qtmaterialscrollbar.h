@@ -6,7 +6,7 @@
 
 class QtMaterialScrollBarPrivate;
 
-class COMPONENTS_EXPORT QtMaterialScrollBar : public QScrollBar
+class QTMATERIALWIDGETS_EXPORT QtMaterialScrollBar : public QScrollBar
 {
     Q_OBJECT
 

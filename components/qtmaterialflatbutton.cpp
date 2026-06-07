@@ -172,16 +172,16 @@ QColor QtMaterialFlatButton::foregroundColor() const
 
     if (d->useThemeColors || !d->foregroundColor.isValid()) {
         if (Qt::OpaqueMode == d->bgMode) {
-            return QtMaterialStyle::instance().themeColor("canvas");
+            return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Canvas);
         }
         switch (d->role) {
             case Material::Primary:
-                return QtMaterialStyle::instance().themeColor("primary1");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
             case Material::Secondary:
-                return QtMaterialStyle::instance().themeColor("accent1");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent1);
             case Material::Default:
             default:
-                return QtMaterialStyle::instance().themeColor("text");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
         }
     }
     return d->foregroundColor;
@@ -204,12 +204,12 @@ QColor QtMaterialFlatButton::backgroundColor() const
     if (d->useThemeColors || !d->backgroundColor.isValid()) {
         switch (d->role) {
             case Material::Primary:
-                return QtMaterialStyle::instance().themeColor("primary1");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
             case Material::Secondary:
-                return QtMaterialStyle::instance().themeColor("accent1");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent1);
             case Material::Default:
             default:
-                return QtMaterialStyle::instance().themeColor("text");
+                return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
         }
     }
     return d->backgroundColor;
@@ -252,7 +252,7 @@ QColor QtMaterialFlatButton::disabledForegroundColor() const
     Q_D(const QtMaterialFlatButton);
 
     if (d->useThemeColors || !d->disabledColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("disabled");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Disabled);
     } else {
         return d->disabledColor;
     }
@@ -273,7 +273,7 @@ QColor QtMaterialFlatButton::disabledBackgroundColor() const
     Q_D(const QtMaterialFlatButton);
 
     if (d->useThemeColors || !d->disabledBackgroundColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("disabled3");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Disabled3);
     } else {
         return d->disabledBackgroundColor;
     }

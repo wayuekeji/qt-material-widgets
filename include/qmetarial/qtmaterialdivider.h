@@ -7,7 +7,7 @@
 
 class QtMaterialDividerPrivate;
 
-class COMPONENTS_EXPORT QtMaterialDivider : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialDivider : public QWidget
 {
     Q_OBJECT
 

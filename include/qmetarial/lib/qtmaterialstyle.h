@@ -2,6 +2,7 @@
 #define QTMATERIALSTYLE_H
 
 #include "components_global.h"
+#include "qtmaterialtheme.h"
 #include <QScopedPointer>
 #include <QtWidgets/QCommonStyle>
 
@@ -13,7 +14,7 @@
 class QtMaterialTheme;
 class QtMaterialStylePrivate;
 
-class COMPONENTS_EXPORT QtMaterialStyle : public QCommonStyle
+class QTMATERIALWIDGETS_EXPORT QtMaterialStyle : public QCommonStyle
 {
     Q_OBJECT
 
@@ -23,6 +24,7 @@ public:
 
     void setTheme(QtMaterialTheme *theme);
     QColor themeColor(const QString &key) const;
+    QColor themeColor(Material::ThemeColor key) const;
 
 protected:
     const QScopedPointer<QtMaterialStylePrivate> d_ptr;

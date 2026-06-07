@@ -29,23 +29,57 @@ QColor QtMaterialThemePrivate::rgba(int r, int g, int b, qreal a) const
  *  @class QtMaterialTheme
  */
 
+const char *Material::themeColorKey(ThemeColor key)
+{
+    switch (key) {
+        case ThemeColor::Primary1:
+            return "primary1";
+        case ThemeColor::Primary2:
+            return "primary2";
+        case ThemeColor::Primary3:
+            return "primary3";
+        case ThemeColor::Accent1:
+            return "accent1";
+        case ThemeColor::Accent2:
+            return "accent2";
+        case ThemeColor::Accent3:
+            return "accent3";
+        case ThemeColor::Text:
+            return "text";
+        case ThemeColor::AlternateText:
+            return "alternateText";
+        case ThemeColor::Canvas:
+            return "canvas";
+        case ThemeColor::Border:
+            return "border";
+        case ThemeColor::Disabled:
+            return "disabled";
+        case ThemeColor::Disabled2:
+            return "disabled2";
+        case ThemeColor::Disabled3:
+            return "disabled3";
+    }
+
+    return "";
+}
+
 QtMaterialTheme::QtMaterialTheme(QObject *parent)
     : QObject(parent)
     , d_ptr(new QtMaterialThemePrivate(this))
 {
-    setColor("primary1", Material::cyan500);
-    setColor("primary2", Material::cyan700);
-    setColor("primary3", Material::lightBlack);
-    setColor("accent1", Material::pinkA200);
-    setColor("accent2", Material::grey100);
-    setColor("accent3", Material::grey500);
-    setColor("text", Material::darkBlack);
-    setColor("alternateText", Material::white);
-    setColor("canvas", Material::white);
-    setColor("border", Material::grey300);
-    setColor("disabled", Material::minBlack);
-    setColor("disabled2", Material::faintBlack);
-    setColor("disabled3", Material::grey300);
+    setColor(Material::ThemeColor::Primary1, Material::cyan500);
+    setColor(Material::ThemeColor::Primary2, Material::cyan700);
+    setColor(Material::ThemeColor::Primary3, Material::lightBlack);
+    setColor(Material::ThemeColor::Accent1, Material::pinkA200);
+    setColor(Material::ThemeColor::Accent2, Material::grey100);
+    setColor(Material::ThemeColor::Accent3, Material::grey500);
+    setColor(Material::ThemeColor::Text, Material::darkBlack);
+    setColor(Material::ThemeColor::AlternateText, Material::white);
+    setColor(Material::ThemeColor::Canvas, Material::white);
+    setColor(Material::ThemeColor::Border, Material::grey300);
+    setColor(Material::ThemeColor::Disabled, Material::minBlack);
+    setColor(Material::ThemeColor::Disabled2, Material::faintBlack);
+    setColor(Material::ThemeColor::Disabled3, Material::grey300);
 }
 
 QtMaterialTheme::~QtMaterialTheme() {}
@@ -59,6 +93,11 @@ QColor QtMaterialTheme::getColor(const QString &key) const
         return QColor();
     }
     return d->colors.value(key);
+}
+
+QColor QtMaterialTheme::getColor(Material::ThemeColor key) const
+{
+    return getColor(QString::fromLatin1(Material::themeColorKey(key)));
 }
 
 void QtMaterialTheme::setColor(const QString &key, const QColor &color)
@@ -142,6 +181,16 @@ void QtMaterialTheme::setColor(const QString &key, Material::Color color)
         d->rgba(255, 255, 255, 0.54)};
 
     d->colors.insert(key, palette[color]);
+}
+
+void QtMaterialTheme::setColor(Material::ThemeColor key, const QColor &color)
+{
+    setColor(QString::fromLatin1(Material::themeColorKey(key)), color);
+}
+
+void QtMaterialTheme::setColor(Material::ThemeColor key, Material::Color color)
+{
+    setColor(QString::fromLatin1(Material::themeColorKey(key)), color);
 }
 
 QIcon QtMaterialTheme::icon(QString category, QString icon)

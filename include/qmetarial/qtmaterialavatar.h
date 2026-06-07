@@ -7,7 +7,7 @@
 
 class QtMaterialAvatarPrivate;
 
-class COMPONENTS_EXPORT QtMaterialAvatar : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialAvatar : public QWidget
 {
     Q_OBJECT
 

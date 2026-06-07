@@ -8,7 +8,7 @@
 
 class QtMaterialFlatButtonPrivate;
 
-class COMPONENTS_EXPORT QtMaterialFlatButton : public QPushButton
+class QTMATERIALWIDGETS_EXPORT QtMaterialFlatButton : public QPushButton
 {
     Q_OBJECT
 

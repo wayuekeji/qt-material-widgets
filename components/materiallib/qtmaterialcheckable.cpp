@@ -194,7 +194,7 @@ QColor QtMaterialCheckable::checkedColor() const
     Q_D(const QtMaterialCheckable);
 
     if (d->useThemeColors || !d->checkedColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("primary1");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
     } else {
         return d->checkedColor;
     }
@@ -215,7 +215,7 @@ QColor QtMaterialCheckable::uncheckedColor() const
     Q_D(const QtMaterialCheckable);
 
     if (d->useThemeColors || !d->uncheckedColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     } else {
         return d->uncheckedColor;
     }
@@ -236,7 +236,7 @@ QColor QtMaterialCheckable::textColor() const
     Q_D(const QtMaterialCheckable);
 
     if (d->useThemeColors || !d->textColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     } else {
         return d->textColor;
     }
@@ -257,7 +257,7 @@ QColor QtMaterialCheckable::disabledColor() const
     Q_D(const QtMaterialCheckable);
 
     if (d->useThemeColors || !d->disabledColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("accent3");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent3);
     } else {
         return d->disabledColor;
     }

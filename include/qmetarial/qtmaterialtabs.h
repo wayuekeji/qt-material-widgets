@@ -9,7 +9,7 @@
 class QtMaterialTabsPrivate;
 class QtMaterialTab;
 
-class COMPONENTS_EXPORT QtMaterialTabs : public QWidget
+class QTMATERIALWIDGETS_EXPORT QtMaterialTabs : public QWidget
 {
     Q_OBJECT
 

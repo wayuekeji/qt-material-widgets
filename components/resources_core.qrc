@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file alias="roboto_black">../fonts/Roboto/Roboto-Black.ttf</file>
+        <file alias="roboto_bold">../fonts/Roboto/Roboto-Bold.ttf</file>
+        <file alias="roboto_medium">../fonts/Roboto/Roboto-Medium.ttf</file>
+        <file alias="roboto_regular">../fonts/Roboto/Roboto-Regular.ttf</file>
+        <file alias="roboto_light">../fonts/Roboto/Roboto-Light.ttf</file>
+        <file alias="roboto_thin">../fonts/Roboto/Roboto-Thin.ttf</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/communication/svg/production/ic_message_24px.svg</file>
+        <file>icons/navigation/svg/production/ic_menu_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_check_box_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_check_box_outline_blank_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_indeterminate_check_box_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_radio_button_checked_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_radio_button_unchecked_24px.svg</file>
+        <file>icons/toggle/svg/production/ic_star_24px.svg</file>
+        <file>icons/combobox/svg/down.svg</file>
+    </qresource>
+</RCC>

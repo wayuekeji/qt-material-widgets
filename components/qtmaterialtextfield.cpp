@@ -155,7 +155,7 @@ QColor QtMaterialTextField::textColor() const
     Q_D(const QtMaterialTextField);
 
     if (d->useThemeColors || !d->textColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     } else {
         return d->textColor;
     }
@@ -176,7 +176,7 @@ QColor QtMaterialTextField::labelColor() const
     Q_D(const QtMaterialTextField);
 
     if (d->useThemeColors || !d->labelColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("accent3");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent3);
     } else {
         return d->labelColor;
     }
@@ -197,7 +197,7 @@ QColor QtMaterialTextField::inkColor() const
     Q_D(const QtMaterialTextField);
 
     if (d->useThemeColors || !d->inkColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("primary1");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
     } else {
         return d->inkColor;
     }
@@ -218,7 +218,7 @@ QColor QtMaterialTextField::inputLineColor() const
     Q_D(const QtMaterialTextField);
 
     if (d->useThemeColors || !d->inputLineColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("border");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Border);
     } else {
         return d->inputLineColor;
     }

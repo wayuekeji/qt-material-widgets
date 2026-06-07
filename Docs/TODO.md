@@ -1,12 +1,14 @@
 ## Way to use this project
 
-Except `add_subdirectory()` to use this project, this project should compile to static library or dynamic library as a separate component.
+The primary integration path is the exported CMake package:
 
-TODO:
+```cmake
+find_package(QtMaterialWidgets CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE QtMaterialWidgets::Widgets)
+```
 
-Figure out how to use this project as static/dynamic libary. 
+Use `CMAKE_PREFIX_PATH` to point the consumer project at the install prefix when the package is not installed in a default CMake search location.
 
-Up to now, we know there will be a `.lib` file after compile, usually add `target_include_directories(${PROJECT_NAME} PRIVATE /path/to/include)` and `target_link_libraries(${PROJECT_NAME} PRIVATE /path/to/.lib/file)` to use a static library in Windows. but we got plenty of compile error as follows:
+The historical approach of manually adding include directories and linking `.lib` or `.so` files directly is no longer the recommended path. Keep it only as a fallback for local debugging.
 
-![image-20240313164015128](TODO.assets/image-20240313164015128.png)
-
+The minimal installed-package consumer is stored in `examples/consumer`.

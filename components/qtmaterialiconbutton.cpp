@@ -133,7 +133,7 @@ QColor QtMaterialIconButton::color() const
     Q_D(const QtMaterialIconButton);
 
     if (d->useThemeColors || !d->color.isValid()) {
-        return QtMaterialStyle::instance().themeColor("text");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Text);
     }
     return d->color;
 }
@@ -153,7 +153,7 @@ QColor QtMaterialIconButton::disabledColor() const
     Q_D(const QtMaterialIconButton);
 
     if (d->useThemeColors || !d->disabledColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("disabled");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Disabled);
     }
     return d->disabledColor;
 }

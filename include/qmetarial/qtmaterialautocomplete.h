@@ -6,7 +6,7 @@
 
 class QtMaterialAutoCompletePrivate;
 
-class COMPONENTS_EXPORT QtMaterialAutoComplete : public QtMaterialTextField
+class QTMATERIALWIDGETS_EXPORT QtMaterialAutoComplete : public QtMaterialTextField
 {
     Q_OBJECT
 

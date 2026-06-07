@@ -161,7 +161,7 @@ QColor QtMaterialSlider::thumbColor() const
     Q_D(const QtMaterialSlider);
 
     if (d->useThemeColors || !d->thumbColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("primary1");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
     } else {
         return d->thumbColor;
     }
@@ -183,7 +183,7 @@ QColor QtMaterialSlider::trackColor() const
     Q_D(const QtMaterialSlider);
 
     if (d->useThemeColors || !d->trackColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("accent3");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent3);
     } else {
         return d->trackColor;
     }
@@ -205,7 +205,7 @@ QColor QtMaterialSlider::disabledColor() const
     Q_D(const QtMaterialSlider);
 
     if (d->useThemeColors || !d->disabledColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("disabled");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Disabled);
     } else {
         return d->disabledColor;
     }

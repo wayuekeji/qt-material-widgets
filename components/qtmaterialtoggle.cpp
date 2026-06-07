@@ -171,7 +171,7 @@ QColor QtMaterialToggle::disabledColor() const
     Q_D(const QtMaterialToggle);
 
     if (d->useThemeColors || !d->disabledColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("disabled");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Disabled);
     } else {
         return d->disabledColor;
     }
@@ -192,7 +192,7 @@ QColor QtMaterialToggle::activeColor() const
     Q_D(const QtMaterialToggle);
 
     if (d->useThemeColors || !d->activeColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("primary1");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Primary1);
     } else {
         return d->activeColor;
     }
@@ -213,7 +213,7 @@ QColor QtMaterialToggle::inactiveColor() const
     Q_D(const QtMaterialToggle);
 
     if (d->useThemeColors || !d->inactiveColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("canvas");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Canvas);
     } else {
         return d->inactiveColor;
     }
@@ -234,7 +234,7 @@ QColor QtMaterialToggle::trackColor() const
     Q_D(const QtMaterialToggle);
 
     if (d->useThemeColors || !d->trackColor.isValid()) {
-        return QtMaterialStyle::instance().themeColor("accent3");
+        return QtMaterialStyle::instance().themeColor(Material::ThemeColor::Accent3);
     } else {
         return d->trackColor;
     }

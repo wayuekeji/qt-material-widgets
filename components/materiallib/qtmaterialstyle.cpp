@@ -48,6 +48,15 @@ QColor QtMaterialStyle::themeColor(const QString &key) const
     return d->theme->getColor(key);
 }
 
+QColor QtMaterialStyle::themeColor(Material::ThemeColor key) const
+{
+    Q_D(const QtMaterialStyle);
+
+    Q_ASSERT(d->theme);
+
+    return d->theme->getColor(key);
+}
+
 QtMaterialStyle::QtMaterialStyle()
     : QCommonStyle()
     , d_ptr(new QtMaterialStylePrivate(this))

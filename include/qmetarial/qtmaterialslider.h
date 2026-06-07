@@ -9,7 +9,7 @@
 
 class QtMaterialSliderPrivate;
 
-class COMPONENTS_EXPORT QtMaterialSlider : public QAbstractSlider
+class QTMATERIALWIDGETS_EXPORT QtMaterialSlider : public QAbstractSlider
 {
     Q_OBJECT
 
