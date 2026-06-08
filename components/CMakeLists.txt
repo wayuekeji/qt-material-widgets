@@ -15,8 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core StateMachine)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core StateMachine)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core StateMachine)
 
 option(QTMATERIALWIDGETS_BUILD_FULL_ICON_PACK
        "Build the full Material icon resource pack" OFF)
@@ -76,8 +75,7 @@ target_compile_definitions(${QTMATERIALWIDGETS_TARGET}
 
 target_link_libraries(
   ${QTMATERIALWIDGETS_CORE_TARGET}
-  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui
-         Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::StateMachine)
+  PUBLIC Qt6::Core Qt6::Gui Qt6::Widgets Qt6::StateMachine)
 
 target_include_directories(
   ${QTMATERIALWIDGETS_CORE_TARGET}
@@ -87,8 +85,7 @@ target_include_directories(
 
 target_link_libraries(
   ${QTMATERIALWIDGETS_TARGET}
-  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui
-         Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::StateMachine
+  PUBLIC Qt6::Core Qt6::Gui Qt6::Widgets Qt6::StateMachine
   PRIVATE ${QTMATERIALWIDGETS_CORE_TARGET})
 
 target_include_directories(

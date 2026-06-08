@@ -9,12 +9,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(QtMaterialWidgets CONFIG REQUIRED)
 
 add_executable(qt-material-widgets-consumer main.cpp)
 
 target_link_libraries(qt-material-widgets-consumer PRIVATE
   QtMaterialWidgets::Widgets
-  Qt${QT_VERSION_MAJOR}::Widgets)
+  Qt6::Widgets)
