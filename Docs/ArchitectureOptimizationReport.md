@@ -1,341 +1,341 @@
-# 项目优化分析报告
+# Project Optimization Analysis Report
 
-日期：2026-06-06
+Date: 2026-06-06
 
-## 1. 分析范围
+## 1. Analysis Scope
 
-本报告只基于项目内事实：
+This report is based only on facts inside the repository:
 
 - `openspec/project.md`
 - `openspec/changes/**`
-- 根 `CMakeLists.txt`、`components/CMakeLists.txt`、`examples/CMakeLists.txt`
-- `qt-material-widgets.pro`、`components/components.pro`、`examples/examples.pro`
+- root `CMakeLists.txt`, `components/CMakeLists.txt`, `examples/CMakeLists.txt`
+- `qt-material-widgets.pro`, `components/components.pro`, `examples/examples.pro`
 - `include/qmetarial/**`
 - `components/**`
 - `examples/**`
 - `Docs/**`
 
-当前仓库缺少以下治理资产：
+The repository currently lacks the following governance assets:
 
-- 未发现实体 `AGENTS.md`
-- 未发现 `openspec/specs/**/spec.md`
-- 未发现 `CONTEXT.md`
-- 未发现 ADR 目录
-- 未发现 `tests/`
-- 未发现 `.github/workflows/`
+- No physical `AGENTS.md` found
+- No `openspec/specs/**/spec.md` found
+- No `CONTEXT.md` found
+- No ADR directory found
+- No `tests/` found
+- No `.github/workflows/` found
 
-下文使用 `Module`、`Interface`、`Implementation`、`Depth`、`Seam`、`Adapter`、`Leverage`、`Locality` 描述架构问题。
+The following sections use `Module`, `Interface`, `Implementation`, `Depth`, `Seam`, `Adapter`, `Leverage`, and `Locality` to describe architecture issues.
 
-## 2. 当前基线
+## 2. Current Baseline
 
-项目定位是 `Qt Widgets` 的 Material Design 组件库，当前已经具备基础库构建能力，并已开始补齐 CMake 包导出：
+The project is positioned as a Material Design component library for `Qt Widgets`. It already has basic library build capability and has started to add CMake package export support:
 
-- 根构建通过 `QTMATERIALWIDGETS_BUILD_EXAMPLES` 控制示例构建。
-- `components/CMakeLists.txt` 已创建 `QtMaterialWidgets::Widgets` alias。
-- 已存在 `install(TARGETS)`、`install(EXPORT)`、`QtMaterialWidgetsConfig.cmake.in` 和版本文件生成。
-- 示例 CMake 已通过 `QtMaterialWidgets::Widgets` 链接库。
+- The root build controls example builds through `QTMATERIALWIDGETS_BUILD_EXAMPLES`.
+- `components/CMakeLists.txt` creates the `QtMaterialWidgets::Widgets` alias.
+- `install(TARGETS)`, `install(EXPORT)`, `QtMaterialWidgetsConfig.cmake.in`, and version file generation already exist.
+- The example CMake build links the library through `QtMaterialWidgets::Widgets`.
 
-本次验证结果：
+Validation results from this pass:
 
-- `cmake -S . -B %TEMP%/qt-material-widgets-codex-report-build -DQTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` 通过。
-- `cmake --build %TEMP%/qt-material-widgets-codex-report-build --config Release --target QtMaterialWidgets` 通过。
-- `cmake -S . -B %TEMP%/qt-material-widgets-codex-report-build-examples -DQTMATERIALWIDGETS_BUILD_EXAMPLES=ON` 通过。
-- `cmake --build %TEMP%/qt-material-widgets-codex-report-build-examples --config Release --target examples` 通过。
-- 构建过程出现 `MSB8029` 临时目录警告和 `pwsh.exe` 环境提示，但目标产物生成成功。
+- `cmake -S . -B %TEMP%/qt-material-widgets-codex-report-build -DQTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` passed.
+- `cmake --build %TEMP%/qt-material-widgets-codex-report-build --config Release --target QtMaterialWidgets` passed.
+- `cmake -S . -B %TEMP%/qt-material-widgets-codex-report-build-examples -DQTMATERIALWIDGETS_BUILD_EXAMPLES=ON` passed.
+- `cmake --build %TEMP%/qt-material-widgets-codex-report-build-examples --config Release --target examples` passed.
+- The build emitted an `MSB8029` temporary-directory warning and a `pwsh.exe` environment notice, but the target artifacts were generated successfully.
 
-## 3. 优先级路线图
+## 3. Priority Roadmap
 
-| 优先级 | 优化方向 | 目标 |
+| Priority | Optimization Area | Goal |
 | --- | --- | --- |
-| P0 | 接入文档与包验证闭环 | 让外部项目能按标准方式消费库 |
-| P0 | 公共 Interface 缺陷治理 | 修正错误属性、命名债务、空壳头暴露 |
-| P0 | 稳定/实验 Module 分级 | 防止未成熟控件继续污染稳定 Interface |
-| P1 | Theme/Icon/Resource Module 深化 | 提升主题与资源访问的 Locality 和 Leverage |
-| P1 | 示例层 Module 收敛 | 降低重复设置编辑器和手写注册的维护成本 |
-| P1 | CMake 源清单与 target 治理 | 降低构建隐式行为 |
-| P2 | 测试与 CI 基线 | 建立可回归验证链路 |
-| P2 | 文档与 OpenSpec 治理 | 让规范、文档、实现保持一致 |
-| P2 | qmake 支持策略 | 降级或补齐验证闭环 |
+| P0 | Consumer documentation and package validation loop | Allow external projects to consume the library through standard mechanisms |
+| P0 | Public Interface defect governance | Fix incorrect properties, naming debt, and exposed shell headers |
+| P0 | Stable/experimental Module classification | Prevent immature widgets from polluting the stable Interface |
+| P1 | Theme/Icon/Resource Module deepening | Improve Locality and Leverage for theme and resource access |
+| P1 | Example-layer Module consolidation | Reduce duplicated settings editors and hand-written registration |
+| P1 | CMake source list and target governance | Reduce implicit build behavior |
+| P2 | Test and CI baseline | Establish regression validation |
+| P2 | Documentation and OpenSpec governance | Keep specifications, documentation, and implementation aligned |
+| P2 | qmake support policy | Downgrade support or add a validation loop |
 
-## 4. 优化点
+## 4. Optimization Points
 
-### P0-01：接入文档与包验证闭环不一致
+### P0-01: Consumer Documentation and Package Validation Loop Are Inconsistent
 
-问题：
+Issue:
 
-项目已经具备标准 CMake package 雏形，但 README 和旧 Docs 仍把手工指定 include 目录与 `.lib/.so` 路径作为主要接入路径。调用方看到的 Interface 与实际推荐路径不一致。
+The project already has the outline of a standard CMake package, but README and older Docs still present manually specified include directories and `.lib/.so` paths as the primary consumption path. The Interface seen by consumers does not match the actual recommended path.
 
-证据：
+Evidence:
 
-- `components/CMakeLists.txt` 已存在 `QtMaterialWidgets::Widgets`、`install(EXPORT)`、`QtMaterialWidgetsConfig.cmake` 生成。
-- `cmake/QtMaterialWidgetsConfig.cmake.in` 已包含 `find_dependency(Qt...)` 与 targets 导入。
-- `README.md` 仍示例 `target_include_directories(... /path/to/dynamic-lib/include/)` 和直接链接 `components.lib/components.so`。
-- `Docs/TODO.md` 仍记录“不知道如何作为 static/dynamic library 使用”的旧问题。
+- `components/CMakeLists.txt` already contains `QtMaterialWidgets::Widgets`, `install(EXPORT)`, and `QtMaterialWidgetsConfig.cmake` generation.
+- `cmake/QtMaterialWidgetsConfig.cmake.in` already contains `find_dependency(Qt...)` and target import logic.
+- `README.md` still shows `target_include_directories(... /path/to/dynamic-lib/include/)` and direct linking to `components.lib/components.so`.
+- `Docs/TODO.md` still records the old question about how to use the project as a static or dynamic library.
 
-建议路径：
+Recommended path:
 
-1. 把 README 主路径改为 `find_package(QtMaterialWidgets CONFIG REQUIRED)` + `target_link_libraries(... QtMaterialWidgets::Widgets)`。
-2. 增加最小 consumer 示例工程，验证 install 后消费。
-3. 将直接链接 `.lib/.so` 文档降级为历史说明或删除。
-4. 在 CI 中加入安装后 `find_package` smoke test。
+1. Change the main README path to `find_package(QtMaterialWidgets CONFIG REQUIRED)` plus `target_link_libraries(... QtMaterialWidgets::Widgets)`.
+2. Add a minimal consumer example project that verifies consumption after installation.
+3. Downgrade direct `.lib/.so` linking documentation to historical notes or remove it.
+4. Add an installed-package `find_package` smoke test to CI.
 
-验证方法：
+Validation method:
 
-- `cmake --install` 到临时前缀。
-- 新建最小 Qt Widgets consumer。
-- 仅通过 `CMAKE_PREFIX_PATH` 查找并链接 `QtMaterialWidgets::Widgets`。
-- consumer 编译通过，且无需手工添加库文件路径。
+- Run `cmake --install` into a temporary prefix.
+- Create a minimal Qt Widgets consumer.
+- Find and link `QtMaterialWidgets::Widgets` only through `CMAKE_PREFIX_PATH`.
+- Verify the consumer builds without manually adding library file paths.
 
-### P0-02：公共 Interface 存在明确缺陷
+### P0-02: The Public Interface Contains Clear Defects
 
-问题：
+Issue:
 
-公共头没有直接包含 `_p.h` 或 `_internal.h`，但仍存在错误属性声明、命名债务、泛化导出宏和空壳头文件。这些都属于稳定 Interface 污染。
+Public headers do not directly include `_p.h` or `_internal.h`, but the stable Interface still contains an incorrect property declaration, naming debt, a generic export macro, and shell headers. These are all forms of stable Interface pollution.
 
-证据：
+Evidence:
 
-- `include/qmetarial/qtmaterialprogress.h`：`backgroundColor` 的 `WRITE` 误写为 `setProgressColor`，应为 `setBackgroundColor`。
-- `include/qmetarial/qtmaterialpaper.h`、`qtmaterialtable.h`、`qtmateriallist.h`、`qtmateriallistitem.h` 只有 include guard，当前 CMake 安装阶段又显式排除这些头。
-- 公共目录名为 `include/qmetarial`，`openspec/project.md` 已记录拼写错误。
-- 导出宏为 `COMPONENTS_EXPORT`，与包名 `QtMaterialWidgets` 不一致。
+- `include/qmetarial/qtmaterialprogress.h`: the `backgroundColor` `WRITE` accessor is incorrectly set to `setProgressColor`; it should be `setBackgroundColor`.
+- `include/qmetarial/qtmaterialpaper.h`, `qtmaterialtable.h`, `qtmateriallist.h`, and `qtmateriallistitem.h` contain only include guards, and the current CMake install phase explicitly excludes those headers.
+- The public include directory is named `include/qmetarial`; `openspec/project.md` already records this spelling error.
+- The export macro is `COMPONENTS_EXPORT`, which does not match the package name `QtMaterialWidgets`.
 
-建议路径：
+Recommended path:
 
-1. 立即修正 `QtMaterialProgress::backgroundColor` 属性写方法。
-2. 建立公共头审计清单：稳定、实验、移除、内部。
-3. 将空壳头从稳定 Interface 中移除，或迁入实验区。
-4. 规划 `qmetarial` 到正确 include 命名的迁移。
-5. 将 `COMPONENTS_EXPORT` 收敛为包语义导出宏。
+1. Fix the `QtMaterialProgress::backgroundColor` property writer immediately.
+2. Establish a public-header audit list: stable, experimental, removed, and internal.
+3. Remove shell headers from the stable Interface or move them into an experimental area.
+4. Plan the migration from `qmetarial` to the correct include namespace.
+5. Converge `COMPONENTS_EXPORT` into a package-semantic export macro.
 
-验证方法：
+Validation method:
 
-- 执行公共头独立编译测试。
-- 用 Qt meta-object 检查 `backgroundColor` 写入是否调用 `setBackgroundColor`。
-- 安装后只包含公开头，不依赖 `components/` 内私有头。
+- Run independent compile tests for public headers.
+- Use Qt meta-object checks to verify that writing `backgroundColor` calls `setBackgroundColor`.
+- After installation, include only public headers and avoid any dependency on private headers under `components/`.
 
-### P0-03：稳定 Module 与实验 Module 未分级
+### P0-03: Stable and Experimental Modules Are Not Classified
 
-问题：
+Issue:
 
-部分控件已经进入公共头和示例，但 Implementation 仍偏空壳或实验态。当前 Interface 让调用方误以为它们已稳定。
+Some widgets have entered public headers and examples while their Implementation is still shell-like or experimental. The current Interface makes consumers believe they are stable.
 
-证据：
+Evidence:
 
-- `QtMaterialMenu` 公开类只有构造和析构，Implementation 基本为空。
-- `QtMaterialSteps` 公开头内直接声明已知布局缺陷，并写有 TODO。
-- `QtMaterialSteps` Implementation 使用文件级 `static int currentWidth`，多实例之间存在状态污染风险。
-- `QtMaterialComboBox::paintEvent` 内每次绘制都 `setItemDelegate(new QtMaterialComboBoxDelegate(this))`，Implementation 行为不适合进入稳定 Interface。
+- `QtMaterialMenu` exposes a public class with only construction and destruction, while the Implementation is mostly empty.
+- `QtMaterialSteps` declares a known layout defect directly in its public header and contains a TODO.
+- `QtMaterialSteps` Implementation uses file-level `static int currentWidth`, creating cross-instance state pollution risk.
+- `QtMaterialComboBox::paintEvent` calls `setItemDelegate(new QtMaterialComboBoxDelegate(this))` on every paint, which is not suitable behavior for a stable Interface.
 
-建议路径：
+Recommended path:
 
-1. 给每个控件打状态标签：stable、experimental、stub、removed。
-2. stable 才进入安装头与 README 已实现列表。
-3. experimental 保留源码与示例，但不作为稳定包 Interface。
-4. stub 类优先删除或补齐，禁止继续作为公开消费入口。
+1. Assign a status label to each widget: stable, experimental, stub, or removed.
+2. Install only stable widgets and list only stable widgets as implemented in README.
+3. Keep experimental widgets in source and examples, but do not expose them as stable package Interface.
+4. Delete or complete stub classes first; they must not remain public consumption entry points.
 
-验证方法：
+Validation method:
 
-- 公共安装头与 README 已实现列表一致。
-- experimental/stub 不被默认安装。
-- 对 stable 控件执行最小构造、属性设置、paint smoke test。
+- Installed public headers match the README implemented-widget list.
+- Experimental and stub widgets are not installed by default.
+- Stable widgets pass minimal construction, property setting, and paint smoke tests.
 
-### P1-01：Theme/Icon/Resource Module 过浅
+### P1-01: Theme/Icon/Resource Module Is Too Shallow
 
-问题：
+Issue:
 
-主题颜色、图标路径、字体注册集中在 `QtMaterialTheme` 和 `QtMaterialStyle`，但 Interface 要调用方理解字符串 key、庞大枚举和资源路径约定。Module 的 Depth 不足，Leverage 偏低；错误也缺少强约束。
+Theme colors, icon paths, and font registration are concentrated in `QtMaterialTheme` and `QtMaterialStyle`, but the Interface requires callers to understand string keys, a large enum set, and resource path conventions. The Module lacks Depth and has low Leverage; errors also lack strong constraints.
 
-证据：
+Evidence:
 
-- `include/qmetarial/lib/qtmaterialtheme.h` 约 301 行，包含大量颜色枚举。
-- `QtMaterialThemePrivate` 用 `QHash<QString, QColor>` 存储颜色。
-- `QtMaterialTheme::getColor` 找不到 key 时仅 `qWarning()` 并返回无效 `QColor()`。
-- `QtMaterialTheme::icon(QString category, QString icon)` 通过字符串拼接 `:/icons/icons/.../ic_..._24px.svg`。
-- `QtMaterialStylePrivate::init` 隐式注册 Roboto 字体并创建默认主题。
+- `include/qmetarial/lib/qtmaterialtheme.h` is about 301 lines and contains many color enums.
+- `QtMaterialThemePrivate` stores colors in `QHash<QString, QColor>`.
+- `QtMaterialTheme::getColor` only calls `qWarning()` and returns an invalid `QColor()` when a key is missing.
+- `QtMaterialTheme::icon(QString category, QString icon)` builds `:/icons/icons/.../ic_..._24px.svg` through string concatenation.
+- `QtMaterialStylePrivate::init` implicitly registers the Roboto font and creates the default theme.
 
-建议路径：
+Recommended path:
 
-1. 将主题 token、颜色表、图标索引从手写业务逻辑中分离为资源 registry。
-2. 对主题 key 与图标 key 建立可验证 Interface，减少任意字符串调用。
-3. 对缺失资源改为 fail-fast 或显式错误对象，不静默返回无效颜色。
-4. 保持 `QtMaterialStyle` 对调用方的 Interface 小而稳定，把资源加载细节留在 Implementation。
+1. Separate theme tokens, color tables, and icon indexes from hand-written business logic into a resource registry.
+2. Build a verifiable Interface for theme keys and icon keys, reducing arbitrary string calls.
+3. Change missing resources to fail-fast behavior or explicit error objects instead of silently returning invalid colors.
+4. Keep the `QtMaterialStyle` Interface small and stable, leaving resource loading details in the Implementation.
 
-验证方法：
+Validation method:
 
-- 单测覆盖已知 theme token、缺失 token、已知 icon、缺失 icon。
-- 启动时验证资源 registry 完整性。
-- 修改一处资源映射不需要改多个控件调用点。
+- Unit tests cover known theme tokens, missing tokens, known icons, and missing icons.
+- Startup validates resource registry completeness.
+- Updating one resource mapping does not require editing multiple widget call sites.
 
-### P1-02：资源包体积与加载策略缺少分层
+### P1-02: Resource Package Size and Loading Strategy Lack Layering
 
-问题：
+Issue:
 
-当前核心库无条件内嵌大量图标和字体，资源 Interface 是“全部打进库”。这对只使用少量控件的调用方缺少 Leverage，也无法按需裁剪。
+The core library currently embeds a large number of icons and fonts unconditionally. The resource Interface is effectively "bundle everything into the library". This gives little Leverage to consumers that use only a small subset of widgets and cannot support on-demand trimming.
 
-证据：
+Evidence:
 
-- `components/resources.qrc` 包含 967 个 `<file>` 条目。
-- 其中 961 个是图标条目，6 个是 Roboto 字体条目。
-- `QtMaterialTheme::icon` 依赖这些资源全部存在。
+- `components/resources.qrc` contains 967 `<file>` entries.
+- 961 entries are icons and 6 entries are Roboto font files.
+- `QtMaterialTheme::icon` depends on all these resources being present.
 
-建议路径：
+Recommended path:
 
-1. 拆分基础字体资源、核心控件图标资源、完整 Material icon pack。
-2. 为资源包建立可选 CMake option 或独立 resource target。
-3. 默认包只包含控件必需资源，完整图标包按需启用。
-4. 给资源缺失提供测试和诊断信息。
+1. Split base font resources, core widget icon resources, and the full Material icon pack.
+2. Create optional CMake options or independent resource targets for resource packs.
+3. Include only resources required by core widgets in the default package, and enable the full icon pack on demand.
+4. Provide tests and diagnostics for missing resources.
 
-验证方法：
+Validation method:
 
-- 默认构建与完整资源构建产物大小可比较。
-- 所有 stable 控件在默认资源包下可运行。
-- 调用完整 icon pack 中非核心图标时，只有启用对应包才成功。
+- Default build and full-resource build artifact sizes can be compared.
+- All stable widgets run with the default resource package.
+- Non-core icons from the full icon pack succeed only when the corresponding package is enabled.
 
-### P1-03：示例层重复度高，验证价值偏低
+### P1-03: The Example Layer Has High Duplication and Low Validation Value
 
-问题：
+Issue:
 
-示例层作为消费者是必要的，但当前每个控件各自维护设置编辑器、布局搭建、`setupForm`、颜色选择和信号连接。该层 Module 较浅，重复 Implementation 分散，后续扩展控件会继续复制模式。
+The example layer is necessary as a consumer, but each widget currently maintains its own settings editor, layout construction, `setupForm`, color selection, and signal connections. This layer is a shallow Module with duplicated Implementation scattered across the tree; adding widgets will continue copying the same pattern.
 
-证据：
+Evidence:
 
-- `examples/` 有 25 个头、26 个 cpp、20 个 `.ui`。
-- 多数 `*settingseditor.cpp` 重复创建 settings widget、canvas、layout、`setupForm`、`updateWidget`。
-- `examples/mainwindow.cpp` 手写 include、手写实例化、手写 `QMap<QString, QWidget*>` 注册页面。
-- `tabssettingseditor.cpp` 使用 `SLOT([](int a) { ... })` 字符串写法，能编译但不是有效的 Qt slot 设计。
+- `examples/` contains 25 headers, 26 cpp files, and 20 `.ui` files.
+- Most `*settingseditor.cpp` files repeat creation of settings widgets, canvas widgets, layouts, `setupForm`, and `updateWidget`.
+- `examples/mainwindow.cpp` manually includes headers, manually instantiates pages, and manually registers pages through `QMap<QString, QWidget*>`.
+- `tabssettingseditor.cpp` uses a string-form `SLOT([](int a) { ... })`, which can compile but is not a valid Qt slot design.
 
-建议路径：
+Recommended path:
 
-1. 提取示例页注册表，让新增示例只声明名称和构造逻辑。
-2. 提取设置页骨架 Module，集中处理 settings/canvas 布局。
-3. 统一颜色选择、禁用状态、主题开关等重复操作。
-4. 将示例从“手工演示”提升为 smoke test 载体。
+1. Extract an example page registry so adding an example only declares its name and construction logic.
+2. Extract a settings-page skeleton Module to centralize the settings/canvas layout.
+3. Unify repeated color selection, disabled-state toggling, theme switching, and similar operations.
+4. Elevate examples from "manual demo" to smoke-test carriers.
 
-验证方法：
+Validation method:
 
-- 新增一个示例页无需修改 `MainWindow` 多处 include 与实例化。
-- stable 控件示例可批量构造。
-- 示例启动 smoke test 能覆盖页面注册完整性。
+- Adding one example page does not require modifying multiple includes and instantiations in `MainWindow`.
+- Stable widget examples can be constructed in batch.
+- Example startup smoke tests cover page registry completeness.
 
-### P1-04：CMake 源清单与 target 语义仍有隐式行为
+### P1-04: CMake Source Lists and Target Semantics Still Have Implicit Behavior
 
-问题：
+Issue:
 
-CMake package 已开始成型，但源码收集和 target 命名仍有历史痕迹。当前 Interface 是 `QtMaterialWidgets::Widgets`，但产物名仍是 `components`，内部源码通过 `file(GLOB)` 自动收集，构建可预测性不足。
+The CMake package has started to take shape, but source collection and target naming still carry historical behavior. The current Interface is `QtMaterialWidgets::Widgets`, but the artifact name is still `components`, and internal source files are auto-collected through `file(GLOB)`, reducing build predictability.
 
-证据：
+Evidence:
 
-- `components/CMakeLists.txt` 使用 `file(GLOB THELIB "materiallib/*")`、`file(GLOB COMPONENTSHEADER "*.h")`、`file(GLOB COMPONENTSSOURCE "*.cpp")`。
-- `examples/CMakeLists.txt` 也使用 `file(GLOB HEADER "*.h")`、`file(GLOB RSOURCE "*.cpp")`、`file(GLOB UI "*.ui")`。
-- `set_target_properties(... OUTPUT_NAME components)` 与包名 `QtMaterialWidgets` 不一致。
-- `components` 子目录自身调用 `project(components)`，target 与包语义不完全一致。
+- `components/CMakeLists.txt` uses `file(GLOB THELIB "materiallib/*")`, `file(GLOB COMPONENTSHEADER "*.h")`, and `file(GLOB COMPONENTSSOURCE "*.cpp")`.
+- `examples/CMakeLists.txt` also uses `file(GLOB HEADER "*.h")`, `file(GLOB RSOURCE "*.cpp")`, and `file(GLOB UI "*.ui")`.
+- `set_target_properties(... OUTPUT_NAME components)` does not match the package name `QtMaterialWidgets`.
+- The `components` subdirectory calls `project(components)` itself, so target semantics and package semantics are not fully aligned.
 
-建议路径：
+Recommended path:
 
-1. 用显式 `target_sources` 替代无 `CONFIGURE_DEPENDS` 的 `file(GLOB)`。
-2. 统一 target、输出产物、导出命名策略。
-3. 将内部 Core target 明确标注为私有 Implementation target。
-4. 给示例 target 使用更明确的名称，例如 demo 或 examples app。
+1. Replace `file(GLOB)` without `CONFIGURE_DEPENDS` with explicit `target_sources`.
+2. Unify target, output artifact, and export naming strategy.
+3. Clearly mark internal Core targets as private Implementation targets.
+4. Give the example target a clearer name, such as demo or examples app.
 
-验证方法：
+Validation method:
 
-- 新增/删除源文件时，CMake diff 明确体现变更。
-- 安装导出的 targets 文件不暴露内部 Implementation target。
-- 下游只感知 `QtMaterialWidgets::Widgets`。
+- Adding or removing source files is reflected explicitly in the CMake diff.
+- Installed exported targets do not expose private Implementation targets.
+- Downstream consumers only see `QtMaterialWidgets::Widgets`.
 
-### P2-01：测试与 CI 缺失
+### P2-01: Tests and CI Are Missing
 
-问题：
+Issue:
 
-当前库能构建，但没有自动化验证保证 Interface 行为、资源可用性、包接入和示例启动。没有 CI 时，跨 Qt5/Qt6、Windows/Linux 的声明无法持续可信。
+The library can build, but there is no automated validation for Interface behavior, resource availability, package consumption, or example startup. Without CI, the declared support for Qt5/Qt6 and Windows/Linux cannot remain trustworthy.
 
-证据：
+Evidence:
 
-- 未发现 `tests/`。
-- 未发现 `.github/workflows/`。
-- 未发现 `enable_testing`、`add_test`、`QTest`。
-- `openspec/project.md` 已记录自动化测试与 CI 缺失。
+- No `tests/` directory found.
+- No `.github/workflows/` found.
+- No `enable_testing`, `add_test`, or `QTest` found.
+- `openspec/project.md` already records missing automated tests and missing CI.
 
-建议路径：
+Recommended path:
 
-1. 建立 `tests/`，先覆盖 `QtMaterialProgress`、`QtMaterialTheme`、`QtMaterialStyle`、资源加载。
-2. 增加 CMake package consumer test。
-3. 增加示例构造 smoke test。
-4. 建立 Windows/Linux + Qt5/Qt6 构建矩阵。
+1. Establish `tests/`, first covering `QtMaterialProgress`, `QtMaterialTheme`, `QtMaterialStyle`, and resource loading.
+2. Add a CMake package consumer test.
+3. Add an example construction smoke test.
+4. Establish a Windows/Linux plus Qt5/Qt6 build matrix.
 
-验证方法：
+Validation method:
 
-- `ctest --output-on-failure` 可执行。
-- CI 至少覆盖 Release 构建、安装、consumer 编译。
-- 每个 P0 Interface 修复都有回归测试。
+- `ctest --output-on-failure` can run.
+- CI covers at least Release build, installation, and consumer compilation.
+- Every P0 Interface fix has a regression test.
 
-### P2-02：文档与 OpenSpec 治理未闭环
+### P2-02: Documentation and OpenSpec Governance Are Not Closed
 
-问题：
+Issue:
 
-项目文档存在，但状态分散，且未形成生效规范目录。OpenSpec change 中已有 roadmap，但缺少归档后的 `openspec/specs/**/spec.md` 作为长期事实来源。
+Project documents exist, but their status is scattered, and there is no effective spec directory. OpenSpec changes already contain a roadmap, but there is no archived `openspec/specs/**/spec.md` as the long-term source of truth.
 
-证据：
+Evidence:
 
-- `Docs/API.md` 基本为空章节。
-- `Docs/TODO.md` 仍停留在旧的手工链接问题。
-- `Docs/RelatedKnowledge/OpaquePointer.md` 和 `QStyle.md` 是知识草稿，未转化为项目决策。
-- 未发现 `openspec/specs/**/spec.md`。
-- 未发现 ADR 与 `CONTEXT.md`。
+- `Docs/API.md` contains mostly empty sections.
+- `Docs/TODO.md` still reflects the old manual-linking problem.
+- `Docs/RelatedKnowledge/OpaquePointer.md` and `QStyle.md` are knowledge drafts and have not been converted into project decisions.
+- No `openspec/specs/**/spec.md` found.
+- No ADR and `CONTEXT.md` found.
 
-建议路径：
+Recommended path:
 
-1. 归档已完成的 OpenSpec 变更，形成生效 spec。
-2. 建立 `CONTEXT.md`，定义项目领域词：Core、Widgets、Examples、Theme、Resource Pack、Demo Page 等。
-3. 建立 ADR 目录，记录 qmake 支持级别、include 命名迁移、资源包拆分等决策。
-4. 用生成式或半自动方式补齐 API 文档，但必须以公共头为事实来源。
+1. Archive completed OpenSpec changes to form active specs.
+2. Establish `CONTEXT.md` and define domain terms: Core, Widgets, Examples, Theme, Resource Pack, Demo Page, and related concepts.
+3. Establish an ADR directory and record decisions such as qmake support level, include-name migration, and resource-pack splitting.
+4. Fill API documentation through generated or semi-automated methods, but public headers must remain the source of truth.
 
-验证方法：
+Validation method:
 
-- `openspec/specs/**/spec.md` 存在并覆盖当前治理规则。
-- README、Docs/API、OpenSpec 的接入方式一致。
-- 每个重大架构选择能在 ADR 中找到决策记录。
+- `openspec/specs/**/spec.md` exists and covers current governance rules.
+- README, Docs/API, and OpenSpec use the same consumption path.
+- Every major architecture choice has a corresponding ADR decision record.
 
-### P2-03：qmake 支持策略需要降级或验证
+### P2-03: qmake Support Policy Needs Downgrade or Validation
 
-问题：
+Issue:
 
-项目声明同时支持 CMake 和 qmake，但 qmake 路径仍直接依赖构建目录产物，且配置停留在 `c++11`。这与 `openspec/project.md` 中 CMake 为主事实来源、C++17 技术栈的设定不一致。
+The project claims support for both CMake and qmake, but the qmake path still directly depends on build-directory artifacts, and its configuration remains at `c++11`. This conflicts with the `openspec/project.md` position that CMake is the primary source of truth and C++17 is the technical baseline.
 
-证据：
+Evidence:
 
-- `qt-material-widgets.pro` 仍以 subdirs 方式同时构建 `components examples`。
-- `examples/examples.pro` 在 Windows/Unix 下直接链接 `$$top_builddir/components` 产物。
-- `components/components.pro` 使用 `CONFIG += c++11`，而项目基线是 C++17。
-- README 明确表示 qmake 首次构建存在奇怪问题并推荐 CMake。
+- `qt-material-widgets.pro` still builds `components examples` through `subdirs`.
+- `examples/examples.pro` directly links artifacts under `$$top_builddir/components` on Windows and Unix.
+- `components/components.pro` uses `CONFIG += c++11`, while the project baseline is C++17.
+- README explicitly states that the first qmake build has unusual issues and recommends CMake.
 
-建议路径：
+Recommended path:
 
-1. 决策 qmake 是主支持、兼容支持还是历史支持。
-2. 若保留，补齐 qmake 最小 CI 与外部接入样例。
-3. 若不保留，从 README 主路径移除 qmake，并在 OpenSpec/ADR 中说明降级原因。
-4. 避免 qmake 示例继续反向依赖构建目录细节。
+1. Decide whether qmake is primary support, compatibility support, or historical support.
+2. If qmake is retained, add minimal qmake CI and an external consumption example.
+3. If qmake is not retained, remove qmake from the README main path and document the downgrade reason in OpenSpec/ADR.
+4. Prevent qmake examples from continuing to depend on build-directory details.
 
-验证方法：
+Validation method:
 
-- qmake 路径有独立构建验证。
-- qmake 示例不要求调用方手工拼接库产物路径。
-- qmake 标准与 CMake 主路径的 C++ 版本一致，或明确声明差异。
+- The qmake path has independent build validation.
+- qmake examples do not require consumers to manually assemble library artifact paths.
+- qmake uses the same C++ version as the CMake main path, or the difference is explicitly documented.
 
-## 5. 后续 OpenSpec 拆分建议
+## 5. Suggested Follow-up OpenSpec Split
 
-建议按以下顺序拆分后续变更：
+Recommended follow-up changes, in order:
 
-1. `fix-public-interface-contracts`：修正 `QtMaterialProgress` 属性、空壳头、导出宏命名。
-2. `consumer-package-smoke-test`：新增安装后 consumer 验证与 README 接入修正。
-3. `stabilize-widget-surface`：建立 stable/experimental/stub 分级。
-4. `theme-resource-module-deepening`：治理 Theme/Icon/Resource Module。
-5. `demo-harness-consolidation`：收敛示例页注册与重复设置编辑器。
-6. `test-ci-baseline`：补齐 QTest、ctest、CI 矩阵。
-7. `qmake-support-policy`：记录并执行 qmake 支持策略。
+1. `fix-public-interface-contracts`: fix the `QtMaterialProgress` property, shell headers, and export macro naming.
+2. `consumer-package-smoke-test`: add installed-package consumer validation and fix README consumption docs.
+3. `stabilize-widget-surface`: establish stable/experimental/stub classification.
+4. `theme-resource-module-deepening`: govern the Theme/Icon/Resource Module.
+5. `demo-harness-consolidation`: consolidate example page registration and duplicated settings editors.
+6. `test-ci-baseline`: add QTest, ctest, and a CI matrix.
+7. `qmake-support-policy`: record and execute the qmake support policy.
 
-## 6. 结论
+## 6. Conclusion
 
-当前最高价值优化不是继续扩充控件数量，而是先把库的消费 Interface、稳定 Module 范围、资源 Module、测试 CI 和文档规范闭环建立起来。
+The highest-value optimization is not to add more widgets, but to first close the loop around the consumer Interface, stable Module scope, Resource Module, tests, CI, and documentation governance.
 
-项目已经具备 CMake package 的雏形，下一步应把“可构建”推进到“可安装、可消费、可验证、可治理”。P0 项完成前，不建议继续扩大公开控件面。
+The project already has the outline of a CMake package. The next step should move from "buildable" to "installable, consumable, verifiable, and governable". Before the P0 items are complete, expanding the public widget surface is not recommended.

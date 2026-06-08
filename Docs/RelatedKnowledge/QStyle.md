@@ -15,4 +15,4 @@ To achieve this, we can call `drawPrimitive()` in `paintEvent`,for example:
 
 We can custom our own style for all of our components.
 
-reference：https://doc.qt.io/qt-6/style-reference.html
+reference: https://doc.qt.io/qt-6/style-reference.html
