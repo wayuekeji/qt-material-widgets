@@ -11,21 +11,21 @@
 
 - Goal: Add macOS while preserving Windows and Ubuntu default verification.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Replace the simple OS matrix with explicit runner/archive rows for Ubuntu, Windows, and macOS Intel; pass the archive through `install-qt-action`; install `qtscxml` for `Qt6StateMachine`.
+- Implementation: Replace the simple OS matrix with explicit runner/archive rows for Ubuntu, Windows, and macOS Intel; pass the archive through `install-qt-action`; install `qtscxml` for `Qt6StateMachine`; set up MSVC before Windows CMake configuration; gate Ubuntu and macOS to `workflow_dispatch`.
 - Verification: Parse workflow YAML and inspect matrix entries.
 
 ## 3. Add Linux consumer runtime smoke
 
 - Goal: Prove the installed package can start a downstream executable, not only compile one.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Add a Linux-only step that runs `build-consumer/qt-material-widgets-consumer` with `QT_QPA_PLATFORM=offscreen` and installed library path.
+- Implementation: Add a manually triggered Linux-only step that runs `build-consumer/qt-material-widgets-consumer` with `QT_QPA_PLATFORM=offscreen` and installed library path.
 - Verification: Inspect workflow and run local command where the compiler environment permits.
 
 ## 4. Add minimal dependency CI job
 
 - Goal: Verify examples and tests are not forced into dependency builds.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Add a Ubuntu minimal job with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, install `qtscxml`, build/install the library, assert target absence, then build the installed-package consumer.
+- Implementation: Add a manually triggered Ubuntu minimal job with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, install `qtscxml`, build/install the library, assert target absence, then build the installed-package consumer.
 - Verification: Parse workflow YAML and inspect minimal configure flags and target checks.
 
 ## 5. Resolve Qt5 support ambiguity

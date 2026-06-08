@@ -29,6 +29,10 @@ The project MUST NOT claim Qt 5 support unless Qt 5 is included in the automated
 
 The GitHub Actions CI workflow SHALL validate the supported CMake delivery path on Windows, Ubuntu, and macOS using Qt 6.
 
+Push and pull-request CI MUST run the Windows CMake package path automatically.
+
+Ubuntu and macOS CMake package path jobs MUST run only when the workflow is manually triggered.
+
 The default CI build SHALL configure with:
 
 - `QTMATERIALWIDGETS_BUILD_EXAMPLES=ON`
@@ -36,6 +40,8 @@ The default CI build SHALL configure with:
 - `BUILD_TESTING=ON`
 
 The CI workflow MUST install the Qt `qtscxml` archive because it provides the `Qt6StateMachine` CMake package required by the library.
+
+The Windows CI workflow MUST use an MSVC compiler environment when installing the `win64_msvc2019_64` Qt archive.
 
 The default CI build MUST run:
 
@@ -47,13 +53,26 @@ The default CI build MUST run:
 - installed-package consumer configure through `CMAKE_PREFIX_PATH`
 - installed-package consumer build
 
-At least one Linux CI path MUST run the installed-package consumer executable with `QT_QPA_PLATFORM=offscreen`.
+At least one manually triggered Linux CI path MUST run the installed-package consumer executable with `QT_QPA_PLATFORM=offscreen`.
 
 #### Scenario: Supported platforms are verified
 
 - **GIVEN** the project declares Windows, Linux, and macOS desktop support
-- **WHEN** CI runs
+- **WHEN** push or pull-request CI runs
+- **THEN** the Windows job SHALL validate the CMake package path
+
+#### Scenario: Manual CI validates extended platforms
+
+- **GIVEN** the project declares Windows, Linux, and macOS desktop support
+- **WHEN** the CI workflow is manually triggered
 - **THEN** Windows, Ubuntu, and macOS jobs SHALL validate the CMake package path
+
+#### Scenario: Windows Qt ABI matches compiler
+
+- **GIVEN** Windows CI installs the `win64_msvc2019_64` Qt archive
+- **WHEN** CMake configures with Ninja
+- **THEN** the compiler environment SHALL expose MSVC `cl`
+- **AND** the build SHALL NOT use MinGW `g++` or `ld` against MSVC Qt libraries
 
 #### Scenario: Installed consumer runs on Linux
 
@@ -63,7 +82,7 @@ At least one Linux CI path MUST run the installed-package consumer executable wi
 
 ### Requirement: Minimal Dependency Configuration
 
-The CI workflow SHALL include a minimal CMake configuration that disables examples and tests.
+The manually triggered CI workflow SHALL include a minimal CMake configuration that disables examples and tests.
 
 The minimal configuration MUST verify that the library can build and install without forcing example or test targets into the dependency build.
 

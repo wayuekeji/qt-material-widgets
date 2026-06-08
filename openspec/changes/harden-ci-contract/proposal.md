@@ -36,9 +36,13 @@ The main CI job will use an explicit matrix of supported Qt6 desktop runners:
 
 All CI jobs install `qtscxml` because the library requires `Qt6StateMachine`, and Qt 6.6.3 does not provide that CMake package from the base archive alone.
 
+The Windows job enters an MSVC developer command environment before CMake configuration because the selected Qt archive is `win64_msvc2019_64`. Without that environment, Ninja can select GitHub's MinGW toolchain and fail during linking because MinGW object files are incompatible with MSVC Qt libraries.
+
 The default job keeps the current build flags and adds a Linux-only consumer smoke run.
 
-A separate Ubuntu minimal job configures with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, builds and installs the library, asserts that example/test targets are absent, and then builds the installed-package consumer.
+Push and pull-request CI runs the Windows job automatically. Ubuntu, macOS, Linux consumer runtime smoke, and the Ubuntu minimal job run only through `workflow_dispatch`.
+
+A separate manually triggered Ubuntu minimal job configures with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, builds and installs the library, asserts that example/test targets are absent, and then builds the installed-package consumer.
 
 CMake files will be normalized to Qt6-only discovery and target usage. This removes the unverified Qt5 support path instead of expanding the CI matrix to a legacy major version.
 
@@ -46,13 +50,16 @@ CMake files will be normalized to Qt6-only discovery and target usage. This remo
 
 - Qt6 is the only supported Qt major version.
 - `qtscxml` is a required CI Qt archive for Qt 6.6.3.
+- Windows CI uses MSVC with the `win64_msvc2019_64` Qt archive.
 - macOS CI uses an explicit Intel runner because the Qt 6.6.3 desktop archive selected by CI is `clang_64`.
-- Minimal dependency validation runs on Ubuntu only to keep feedback time bounded while still verifying the dependency contract.
-- Consumer runtime smoke runs on Linux only because it can run deterministically with `QT_QPA_PLATFORM=offscreen`.
+- Ubuntu/macOS validation is manual-only.
+- Minimal dependency validation runs manually on Ubuntu only to keep automatic feedback time bounded while still preserving an explicit verification path.
+- Consumer runtime smoke runs manually on Linux only because it can run deterministically with `QT_QPA_PLATFORM=offscreen`.
 
 ## Risks
 
 - macOS hosted runner labels can change over time; the explicit Intel label must be maintained with the GitHub Actions runner fleet.
+- If the Windows Qt archive changes to MinGW, the compiler setup must change with it.
 - Removing Qt5 discovery may break unverified local Qt5 builds. This is intentional because Qt5 is not part of the support contract.
 - Consumer runtime smoke only proves startup-level integration, not full widget behavior.
 
