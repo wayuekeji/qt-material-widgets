@@ -49,6 +49,7 @@ jobs:
         with:
           version: ${{ matrix.qt-version }}
           arch: ${{ matrix.qt-arch }}
+          modules: qtscxml
           cache: true
 
       - name: Configure
@@ -105,6 +106,7 @@ jobs:
         with:
           version: 6.6.3
           arch: gcc_64
+          modules: qtscxml
           cache: true
 
       - name: Configure minimal

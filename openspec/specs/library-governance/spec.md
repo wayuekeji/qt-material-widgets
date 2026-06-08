@@ -35,6 +35,8 @@ The default CI build SHALL configure with:
 - `QTMATERIALWIDGETS_BUILD_FULL_ICON_PACK=OFF`
 - `BUILD_TESTING=ON`
 
+The CI workflow MUST install the Qt `qtscxml` archive because it provides the `Qt6StateMachine` CMake package required by the library.
+
 The default CI build MUST run:
 
 - CMake configure
@@ -66,6 +68,8 @@ The CI workflow SHALL include a minimal CMake configuration that disables exampl
 The minimal configuration MUST verify that the library can build and install without forcing example or test targets into the dependency build.
 
 The minimal configuration MUST verify that an installed-package consumer can still configure and build against the minimal installation.
+
+The minimal configuration MUST install the same Qt archives required by the library, including `qtscxml`.
 
 #### Scenario: Library dependency build remains minimal
 

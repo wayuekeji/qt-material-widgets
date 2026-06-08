@@ -34,6 +34,8 @@ The main CI job will use an explicit matrix of supported Qt6 desktop runners:
 - Windows latest with `win64_msvc2019_64`
 - macOS Intel with `clang_64`
 
+All CI jobs install `qtscxml` because the library requires `Qt6StateMachine`, and Qt 6.6.3 does not provide that CMake package from the base archive alone.
+
 The default job keeps the current build flags and adds a Linux-only consumer smoke run.
 
 A separate Ubuntu minimal job configures with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, builds and installs the library, asserts that example/test targets are absent, and then builds the installed-package consumer.
@@ -43,6 +45,7 @@ CMake files will be normalized to Qt6-only discovery and target usage. This remo
 ## Decisions
 
 - Qt6 is the only supported Qt major version.
+- `qtscxml` is a required CI Qt archive for Qt 6.6.3.
 - macOS CI uses an explicit Intel runner because the Qt 6.6.3 desktop archive selected by CI is `clang_64`.
 - Minimal dependency validation runs on Ubuntu only to keep feedback time bounded while still verifying the dependency contract.
 - Consumer runtime smoke runs on Linux only because it can run deterministically with `QT_QPA_PLATFORM=offscreen`.

@@ -4,6 +4,8 @@
 
 The GitHub Actions CI workflow SHALL include a macOS job for the supported CMake package path while the project declares macOS as a target platform.
 
+The macOS job MUST install all Qt archives required by the library, including `qtscxml` for `Qt6StateMachine`.
+
 #### Scenario: macOS package path is verified
 
 - **GIVEN** the project declares macOS desktop support
@@ -13,6 +15,8 @@ The GitHub Actions CI workflow SHALL include a macOS job for the supported CMake
 ### Requirement: Minimal CMake Configuration CI
 
 The GitHub Actions CI workflow SHALL include a minimal dependency-build job with examples and tests disabled.
+
+The minimal dependency-build job MUST install `qtscxml` so CMake can resolve `Qt6StateMachine`.
 
 #### Scenario: Examples and tests are not forced into dependency builds
 

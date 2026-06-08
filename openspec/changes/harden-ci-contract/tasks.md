@@ -11,7 +11,7 @@
 
 - Goal: Add macOS while preserving Windows and Ubuntu default verification.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Replace the simple OS matrix with explicit runner/archive rows for Ubuntu, Windows, and macOS Intel; pass the archive through `install-qt-action`.
+- Implementation: Replace the simple OS matrix with explicit runner/archive rows for Ubuntu, Windows, and macOS Intel; pass the archive through `install-qt-action`; install `qtscxml` for `Qt6StateMachine`.
 - Verification: Parse workflow YAML and inspect matrix entries.
 
 ## 3. Add Linux consumer runtime smoke
@@ -25,7 +25,7 @@
 
 - Goal: Verify examples and tests are not forced into dependency builds.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Add a Ubuntu minimal job with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, build/install the library, assert target absence, then build the installed-package consumer.
+- Implementation: Add a Ubuntu minimal job with `QTMATERIALWIDGETS_BUILD_EXAMPLES=OFF` and `BUILD_TESTING=OFF`, install `qtscxml`, build/install the library, assert target absence, then build the installed-package consumer.
 - Verification: Parse workflow YAML and inspect minimal configure flags and target checks.
 
 ## 5. Resolve Qt5 support ambiguity

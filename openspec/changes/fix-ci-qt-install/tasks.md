@@ -2,10 +2,10 @@
 
 ## 1. Fix Qt installation in CI
 
-- Goal: Remove the invalid Qt module archive request that prevents GitHub Actions from installing Qt 6.6.3.
+- Goal: Replace the invalid Qt module archive request with the valid archive that provides `Qt6StateMachine`.
 - Impact: `.github/workflows/ci.yml`.
-- Implementation: Delete the `modules: qtstatemachine` input from the `jurplel/install-qt-action@v4` step.
-- Verification: Use `aqtinstall` module listing for Qt 6.6.3 Windows and Linux to confirm `qtstatemachine` is not a valid archive name, and inspect the workflow to confirm the invalid input is absent.
+- Implementation: Set `modules: qtscxml` on the `jurplel/install-qt-action@v4` step.
+- Verification: Use `aqtinstall` module listing for Qt 6.6.3 Windows, Linux, and macOS to confirm `qtscxml` is a valid archive name and `qtstatemachine` is not.
 
 ## 2. Verify CI contract remains intact
 
