@@ -39,7 +39,6 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt-version }}
-          modules: qtstatemachine
           cache: true
 
       - name: Configure
