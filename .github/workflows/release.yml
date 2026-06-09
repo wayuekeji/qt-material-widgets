@@ -1,0 +1,370 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version, for example 1.2.3 or v1.2.3
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: 6.6.3
+
+jobs:
+  prepare-release:
+    name: Prepare release
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.validate.outputs.release_tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release version
+        id: validate
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $version = $env:RELEASE_VERSION.Trim()
+          if ($version -notmatch '^v?\d+\.\d+\.\d+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$') {
+            throw "Release version must match v?MAJOR.MINOR.PATCH[-PRERELEASE], got: $version"
+          }
+
+          $tag = $version
+          if (-not $tag.StartsWith("v", [System.StringComparison]::Ordinal)) {
+            $tag = "v$tag"
+          }
+
+          $tagCheckOutput = git ls-remote --exit-code --tags origin "refs/tags/$tag" 2>&1
+          $tagCheckExitCode = $LASTEXITCODE
+          if ($tagCheckExitCode -eq 0) {
+            throw "Tag already exists: $tag"
+          }
+          if ($tagCheckExitCode -ne 2) {
+            throw "Failed to check remote tag $tag. git exited with ${tagCheckExitCode}: $tagCheckOutput"
+          }
+
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = "application/vnd.github+json"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          $repo = $env:GITHUB_REPOSITORY
+          $existingRelease = $null
+
+          try {
+            $existingRelease = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Headers $headers
+          }
+          catch {
+            $response = $_.Exception.Response
+            if (-not $response) {
+              throw
+            }
+
+            $statusCode = [int]$response.StatusCode
+            if ($statusCode -ne 404) {
+              throw
+            }
+          }
+
+          if ($existingRelease) {
+            throw "Release already exists: $tag"
+          }
+
+          "release_tag=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "Release tag: $tag"
+
+  package:
+    name: Package ${{ matrix.package_id }}
+    runs-on: ${{ matrix.runner }}
+    needs: prepare-release
+    timeout-minutes: 90
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package_id: windows-x64
+            runner: windows-latest
+            qt_arch: win64_msvc2019_64
+          - package_id: ubuntu-x64
+            runner: ubuntu-latest
+            qt_arch: gcc_64
+          - package_id: macos-x64
+            runner: macos-15-intel
+            qt_arch: clang_64
+
+    env:
+      RELEASE_TAG: ${{ needs.prepare-release.outputs.release_tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build build-essential libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0
+
+      - name: Install Windows build dependencies
+        if: runner.os == 'Windows'
+        run: choco install ninja -y
+
+      - name: Install macOS build dependencies
+        if: runner.os == 'macOS'
+        run: brew list ninja >/dev/null 2>&1 || brew install ninja
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: ${{ matrix.qt_arch }}
+          modules: qtscxml
+          cache: true
+
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DQTMATERIALWIDGETS_BUILD_EXAMPLES=ON
+          -DQTMATERIALWIDGETS_BUILD_FULL_ICON_PACK=OFF
+          -DBUILD_TESTING=ON
+
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
+
+      - name: Test
+        run: ctest --test-dir build --build-config ${{ env.BUILD_TYPE }} --output-on-failure
+
+      - name: Build examples
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --target examples --parallel
+
+      - name: Install package
+        run: cmake --install build --config ${{ env.BUILD_TYPE }} --prefix "${{ github.workspace }}/install"
+
+      - name: Configure consumer
+        run: >
+          cmake -S examples/consumer -B build-consumer -G Ninja
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DCMAKE_PREFIX_PATH="${{ github.workspace }}/install"
+
+      - name: Build consumer
+        run: cmake --build build-consumer --config ${{ env.BUILD_TYPE }} --parallel
+
+      - name: Create package archive
+        id: package
+        shell: pwsh
+        env:
+          PACKAGE_ID: ${{ matrix.package_id }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $installDir = Join-Path $env:GITHUB_WORKSPACE "install"
+          if (-not (Test-Path -LiteralPath $installDir -PathType Container)) {
+            throw "Install directory was not found: $installDir"
+          }
+
+          $packageName = "qt-material-widgets-$env:RELEASE_TAG-$env:PACKAGE_ID"
+          $stagingRoot = Join-Path $env:RUNNER_TEMP "release-package"
+          $packageRoot = Join-Path $stagingRoot $packageName
+          $assetPath = Join-Path $env:GITHUB_WORKSPACE "$packageName.zip"
+
+          if (Test-Path -LiteralPath $stagingRoot) {
+            Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+          }
+          if (Test-Path -LiteralPath $assetPath) {
+            Remove-Item -LiteralPath $assetPath -Force
+          }
+
+          New-Item -ItemType Directory -Force -Path $stagingRoot | Out-Null
+          Copy-Item -LiteralPath $installDir -Destination $packageRoot -Recurse
+          Compress-Archive -Path $packageRoot -DestinationPath $assetPath -CompressionLevel Optimal
+
+          if (-not (Test-Path -LiteralPath $assetPath -PathType Leaf)) {
+            throw "Release asset was not created: $assetPath"
+          }
+
+          "asset_path=$assetPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "asset_name=$packageName.zip" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "Created package: $assetPath"
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.asset_name }}
+          path: ${{ steps.package.outputs.asset_path }}
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs:
+      - prepare-release
+      - package
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.prepare-release.outputs.release_tag }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $assetDir = Join-Path $env:GITHUB_WORKSPACE "release-assets"
+          $assets = @(Get-ChildItem -LiteralPath $assetDir -Recurse -File -Filter "*.zip" | Sort-Object Name)
+          if ($assets.Count -ne 3) {
+            $assetNames = ($assets | ForEach-Object { $_.Name }) -join ", "
+            throw "Expected exactly 3 release assets, found $($assets.Count): $assetNames"
+          }
+
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = "application/vnd.github+json"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          $repo = $env:GITHUB_REPOSITORY
+          $tag = $env:RELEASE_TAG
+          $releaseId = $null
+          $tagCreated = $false
+
+          function Invoke-CheckedCommand {
+            param(
+              [Parameter(Mandatory = $true)]
+              [string]$Description,
+              [Parameter(Mandatory = $true)]
+              [string]$FilePath,
+              [Parameter(Mandatory = $true)]
+              [string[]]$Arguments
+            )
+
+            Write-Host $Description
+            & $FilePath @Arguments
+            if ($LASTEXITCODE -ne 0) {
+              throw "$Description failed with exit code $LASTEXITCODE"
+            }
+          }
+
+          try {
+            $tagCheckOutput = git ls-remote --exit-code --tags origin "refs/tags/$tag" 2>&1
+            $tagCheckExitCode = $LASTEXITCODE
+            if ($tagCheckExitCode -eq 0) {
+              throw "Tag already exists: $tag"
+            }
+            if ($tagCheckExitCode -ne 2) {
+              throw "Failed to check remote tag $tag. git exited with ${tagCheckExitCode}: $tagCheckOutput"
+            }
+
+            $existingRelease = $null
+            try {
+              $existingRelease = Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Headers $headers
+            }
+            catch {
+              $response = $_.Exception.Response
+              if (-not $response) {
+                throw
+              }
+
+              $statusCode = [int]$response.StatusCode
+              if ($statusCode -ne 404) {
+                throw
+              }
+            }
+            if ($existingRelease) {
+              throw "Release already exists: $tag"
+            }
+
+            Invoke-CheckedCommand `
+              -Description "Configuring git user name" `
+              -FilePath "git" `
+              -Arguments @("config", "user.name", "github-actions[bot]")
+            Invoke-CheckedCommand `
+              -Description "Configuring git user email" `
+              -FilePath "git" `
+              -Arguments @("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+            Invoke-CheckedCommand `
+              -Description "Creating release tag $tag" `
+              -FilePath "git" `
+              -Arguments @("tag", "-a", $tag, $env:GITHUB_SHA, "-m", "Release $tag")
+            Invoke-CheckedCommand `
+              -Description "Pushing release tag $tag" `
+              -FilePath "git" `
+              -Arguments @("push", "origin", "refs/tags/$tag")
+            $tagCreated = $true
+
+            $createBody = @{
+              tag_name = $tag
+              target_commitish = $env:GITHUB_SHA
+              name = $tag
+              draft = $false
+              prerelease = $tag.Contains("-")
+              generate_release_notes = $true
+            } | ConvertTo-Json
+
+            $release = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/releases" -Headers $headers -ContentType "application/json" -Body $createBody
+            $releaseId = $release.id
+
+            foreach ($asset in $assets) {
+              $escapedAssetName = [System.Uri]::EscapeDataString($asset.Name)
+              $uploadUri = "https://uploads.github.com/repos/$repo/releases/$releaseId/assets?name=$escapedAssetName"
+              Write-Host "Uploading $($asset.Name)"
+              Invoke-RestMethod -Method Post -Uri $uploadUri -Headers $headers -ContentType "application/zip" -InFile $asset.FullName | Out-Null
+            }
+          }
+          catch {
+            if ($releaseId) {
+              try {
+                Invoke-RestMethod -Method Delete -Uri "https://api.github.com/repos/$repo/releases/$releaseId" -Headers $headers | Out-Null
+              }
+              catch {
+                Write-Warning "Failed to delete partial release ${releaseId}: $($_.Exception.Message)"
+              }
+            }
+
+            if ($tagCreated) {
+              try {
+                Invoke-CheckedCommand `
+                  -Description "Deleting partial tag $tag" `
+                  -FilePath "git" `
+                  -Arguments @("push", "--delete", "origin", $tag)
+              }
+              catch {
+                Write-Warning "Failed to delete partial tag ${tag}: $($_.Exception.Message)"
+              }
+            }
+
+            throw
+          }

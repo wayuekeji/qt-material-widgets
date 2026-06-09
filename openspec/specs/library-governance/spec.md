@@ -1,3 +1,7 @@
+## Purpose
+
+Define the supported build, package, CI, and downstream consumption contract for the Qt Material Widgets library.
+
 ## Requirements
 
 ### Requirement: Supported Build System
