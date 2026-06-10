@@ -51,13 +51,13 @@ jobs:
             $tag = "v$tag"
           }
 
-          $tagCheckOutput = git ls-remote --exit-code --tags origin "refs/tags/$tag" 2>&1
+          $tagCheckOutput = git ls-remote --tags origin "refs/tags/$tag" 2>&1
           $tagCheckExitCode = $LASTEXITCODE
-          if ($tagCheckExitCode -eq 0) {
-            throw "Tag already exists: $tag"
-          }
-          if ($tagCheckExitCode -ne 2) {
+          if ($tagCheckExitCode -ne 0) {
             throw "Failed to check remote tag $tag. git exited with ${tagCheckExitCode}: $tagCheckOutput"
+          }
+          if (-not [string]::IsNullOrWhiteSpace($tagCheckOutput)) {
+            throw "Tag already exists: $tag"
           }
 
           $headers = @{
@@ -127,6 +127,10 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install ninja -y
 
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'
         run: brew list ninja >/dev/null 2>&1 || brew install ninja
@@ -137,11 +141,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           arch: ${{ matrix.qt_arch }}
           modules: qtscxml
-          cache: true
-
-      - name: Setup MSVC
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+          cache: false
 
       - name: Configure
         run: >
@@ -279,13 +279,13 @@ jobs:
           }
 
           try {
-            $tagCheckOutput = git ls-remote --exit-code --tags origin "refs/tags/$tag" 2>&1
+            $tagCheckOutput = git ls-remote --tags origin "refs/tags/$tag" 2>&1
             $tagCheckExitCode = $LASTEXITCODE
-            if ($tagCheckExitCode -eq 0) {
-              throw "Tag already exists: $tag"
-            }
-            if ($tagCheckExitCode -ne 2) {
+            if ($tagCheckExitCode -ne 0) {
               throw "Failed to check remote tag $tag. git exited with ${tagCheckExitCode}: $tagCheckOutput"
+            }
+            if (-not [string]::IsNullOrWhiteSpace($tagCheckOutput)) {
+              throw "Tag already exists: $tag"
             }
 
             $existingRelease = $null

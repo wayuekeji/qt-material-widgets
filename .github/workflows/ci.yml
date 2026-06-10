@@ -27,6 +27,10 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install ninja -y
 
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'
         run: brew list ninja >/dev/null 2>&1 || brew install ninja
@@ -37,11 +41,7 @@ jobs:
           version: 6.6.3
           arch: win64_msvc2019_64
           modules: qtscxml
-          cache: true
-
-      - name: Setup MSVC
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+          cache: false
 
       - name: Configure
         run: >
@@ -108,7 +108,7 @@ jobs:
           version: ${{ matrix.qt-version }}
           arch: ${{ matrix.qt-arch }}
           modules: qtscxml
-          cache: true
+          cache: false
 
       - name: Configure
         run: >
@@ -166,7 +166,7 @@ jobs:
           version: 6.6.3
           arch: gcc_64
           modules: qtscxml
-          cache: true
+          cache: false
 
       - name: Configure minimal
         run: >
