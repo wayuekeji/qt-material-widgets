@@ -29,6 +29,8 @@ This project now treats CMake as the supported build, package, and downstream in
 
 The recommended integration path is the exported CMake package.
 
+For prebuilt GitHub Release archives, see [Using GitHub Release Archives](Docs/ReleaseUsage.md).
+
 Build and install the library first:
 
 ```cmake
